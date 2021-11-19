@@ -33,9 +33,9 @@ fileprivate enum FlutterPlatformAlertStyle: String {
                     NSLocalizedString("Try Again", comment: ""),
                     NSLocalizedString("Continue", comment: "")]
         case .ok:
-            return [NSLocalizedString("Ok", comment: "")]
+            return [NSLocalizedString("OK", comment: "")]
         case .okCancel:
-            return [NSLocalizedString("Ok", comment: ""),
+            return [NSLocalizedString("OK", comment: ""),
                     NSLocalizedString("Cancel", comment: "")]
         case .retryCancel:
             return [NSLocalizedString("Retry", comment: ""),
