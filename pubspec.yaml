@@ -33,6 +33,8 @@ flutter:
         pluginClass: FlutterPlatformAlertPlugin
       macos:
         pluginClass: FlutterPlatformAlertPlugin
+      windows:
+        pluginClass: FlutterPlatformAlertPlugin
       web:
         pluginClass: FlutterPlatformAlertWeb
         fileName: flutter_platform_alert_web.dart
