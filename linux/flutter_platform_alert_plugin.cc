@@ -51,7 +51,6 @@ static const int PLUGIN_CONTINUE = -104;
 FlMethodResponse*
 show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
 {
-  printf("staring plugin\n");
   FlValue* args = fl_method_call_get_args(method_call);
 
   g_autoptr(GError) error = nullptr;
@@ -68,8 +67,7 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
   }
 
   g_autofree gchar* alert_style = get_string_value(args, "alertStyle", &error);
-  g_autofree gchar* icon_style =
-    get_string_value(args, "iconStyleString", &error);
+  g_autofree gchar* icon_style = get_string_value(args, "iconStyle", &error);
 
   GtkMessageType messageType = GTK_MESSAGE_OTHER;
   if (strcmp(icon_style, "error") == 0 || strcmp(icon_style, "hand") == 0 ||
@@ -102,7 +100,7 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
   } else if (strcmp(alert_style, "cancelTryContinue") == 0) {
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Try Again"), PLUGIN_TRY_AGAIN);
-    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Continue"), PLUGIN_CONTINUE);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Continue"), PLUGIN_CONTINUE);
   } else if (strcmp(alert_style, "okCancel") == 0) {
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), GTK_RESPONSE_OK);
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
@@ -120,15 +118,6 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), GTK_RESPONSE_OK);
   }
 
-  // GtkWidget* content_area =
-  // gtk_dialog_get_content_area(GTK_DIALOG(dialog)); GtkWidget* label =
-  // gtk_label_new(text); gtk_widget_set_margin_top(label, 10);
-  // gtk_widget_set_margin_bottom(label, 10);
-  // gtk_widget_set_margin_start(label, 10);
-  // gtk_widget_set_margin_end(label, 10);
-  // gtk_container_add(GTK_CONTAINER(content_area), label);
-
-  // gtk_widget_show_all(dialog);
   gint selectedButton = gtk_dialog_run(GTK_DIALOG(dialog));
   gtk_widget_destroy(dialog);
 
