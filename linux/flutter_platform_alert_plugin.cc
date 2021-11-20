@@ -2,9 +2,12 @@
 
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
+#include <libintl.h>
 #include <sys/utsname.h>
 
 #include <cstring>
+
+#define _(String) gettext(String)
 
 const char kBadArgumentsError[] = "Bad Arguments";
 
@@ -39,11 +42,11 @@ get_string_value(FlValue* args, const char* name, GError** error)
   return g_strdup(fl_value_get_string(url_value));
 }
 
-const int PLATFORM_ALERT_ABORT = -100;
-const int PLATFORM_ALERT_RETRY = -101;
-const int PLATFORM_ALERT_IGNORE = -102;
-const int PLATFORM_ALERT_TRY_AGAIN = -103;
-const int PLATFORM_ALERT_CONTINUE = -104;
+static const int PLUGIN_ABORT = -100;
+static const int PLUGIN_RETRY = -101;
+static const int PLUGIN_IGNORE = -102;
+static const int PLUGIN_TRY_AGAIN = -103;
+static const int PLUGIN_CONTINUE = -104;
 
 FlMethodResponse*
 show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
@@ -65,109 +68,85 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
   }
 
   g_autofree gchar* alert_style = get_string_value(args, "alertStyle", &error);
-  // g_autofree gchar* iconStyleString =
-  //   get_string_value(args, "iconStyleString", &error);
+  g_autofree gchar* icon_style =
+    get_string_value(args, "iconStyleString", &error);
 
-  GtkWidget* dialog;
-  GtkDialogFlags flags =
-    (GtkDialogFlags)(GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT);
-
-  if (strcmp(alert_style, "abortRetryIgnore") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "Abort",
-                                         PLATFORM_ALERT_ABORT,
-                                         "Retry",
-                                         PLATFORM_ALERT_RETRY,
-                                         "Ignore",
-                                         PLATFORM_ALERT_IGNORE,
-                                         NULL);
-  } else if (strcmp(alert_style, "cancelTryContinue") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "Cancel",
-                                         GTK_RESPONSE_CANCEL,
-                                         "Try Again",
-                                         PLATFORM_ALERT_TRY_AGAIN,
-                                         "_Continue",
-                                         PLATFORM_ALERT_CONTINUE,
-                                         NULL);
-  } else if (strcmp(alert_style, "okCancel") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "_OK",
-                                         GTK_RESPONSE_OK,
-                                         "_Cancel",
-                                         GTK_RESPONSE_CANCEL,
-                                         NULL);
-  } else if (strcmp(alert_style, "retryCancel") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "Retry",
-                                         PLATFORM_ALERT_RETRY,
-                                         "Cancel",
-                                         GTK_RESPONSE_CANCEL,
-                                         NULL);
-  } else if (strcmp(alert_style, "yesNo") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "Yes",
-                                         GTK_RESPONSE_YES,
-                                         "No",
-                                         GTK_RESPONSE_NO,
-                                         NULL);
-  } else if (strcmp(alert_style, "yesNoCancel") == 0) {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "Yes",
-                                         GTK_RESPONSE_YES,
-                                         "No",
-                                         GTK_RESPONSE_NO,
-                                         "Cancel",
-                                         GTK_RESPONSE_CANCEL,
-                                         NULL);
-  } else {
-    dialog = gtk_dialog_new_with_buttons(window_title,
-                                         (GtkWindow*)self->widget,
-                                         flags,
-                                         "OK",
-                                         GTK_RESPONSE_OK,
-                                         NULL);
+  GtkMessageType messageType = GTK_MESSAGE_OTHER;
+  if (strcmp(icon_style, "error") == 0 || strcmp(icon_style, "hand") == 0 ||
+      strcmp(icon_style, "stop") == 0) {
+    messageType = GTK_MESSAGE_ERROR;
+  } else if (strcmp(icon_style, "exclamation") == 0 ||
+             strcmp(icon_style, "warning") == 0) {
+    messageType = GTK_MESSAGE_WARNING;
+  } else if (strcmp(icon_style, "information") == 0 ||
+             strcmp(icon_style, "asterisk") == 0) {
+    messageType = GTK_MESSAGE_INFO;
+  } else if (strcmp(icon_style, "question") == 0) {
+    messageType = GTK_MESSAGE_QUESTION;
   }
 
-  GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-  GtkWidget* label = gtk_label_new(text);
-  gtk_widget_set_margin_top(label, 10);
-  gtk_widget_set_margin_bottom(label, 10);
-  gtk_widget_set_margin_start(label, 10);
-  gtk_widget_set_margin_end(label, 10);
-  gtk_container_add(GTK_CONTAINER(content_area), label);
+  GtkDialogFlags flags = (GtkDialogFlags)(GTK_DIALOG_DESTROY_WITH_PARENT);
+  GtkWidget* dialog = gtk_message_dialog_new((GtkWindow*)self->widget,
+                                             flags,
+                                             messageType,
+                                             GTK_BUTTONS_NONE,
+                                             window_title,
+                                             NULL);
+  gtk_message_dialog_format_secondary_text(
+    GTK_MESSAGE_DIALOG(dialog), text, NULL);
 
-  gtk_widget_show_all(dialog);
-  gint selectedButton = gtk_dialog_run((GtkDialog*)dialog);
+  if (strcmp(alert_style, "abortRetryIgnore") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Abort"), PLUGIN_ABORT);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Retry"), PLUGIN_RETRY);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Ignore"), PLUGIN_IGNORE);
+  } else if (strcmp(alert_style, "cancelTryContinue") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Try Again"), PLUGIN_TRY_AGAIN);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Continue"), PLUGIN_CONTINUE);
+  } else if (strcmp(alert_style, "okCancel") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), GTK_RESPONSE_OK);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+  } else if (strcmp(alert_style, "retryCancel") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Retry"), PLUGIN_RETRY);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+  } else if (strcmp(alert_style, "yesNo") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Yes"), GTK_RESPONSE_YES);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("No"), GTK_RESPONSE_NO);
+  } else if (strcmp(alert_style, "yesNoCancel") == 0) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Yes"), GTK_RESPONSE_YES);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("No"), GTK_RESPONSE_NO);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+  } else {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), GTK_RESPONSE_OK);
+  }
+
+  // GtkWidget* content_area =
+  // gtk_dialog_get_content_area(GTK_DIALOG(dialog)); GtkWidget* label =
+  // gtk_label_new(text); gtk_widget_set_margin_top(label, 10);
+  // gtk_widget_set_margin_bottom(label, 10);
+  // gtk_widget_set_margin_start(label, 10);
+  // gtk_widget_set_margin_end(label, 10);
+  // gtk_container_add(GTK_CONTAINER(content_area), label);
+
+  // gtk_widget_show_all(dialog);
+  gint selectedButton = gtk_dialog_run(GTK_DIALOG(dialog));
   gtk_widget_destroy(dialog);
 
   const char* string = nullptr;
   switch (selectedButton) {
-    case PLATFORM_ALERT_ABORT:
+    case PLUGIN_ABORT:
       string = "abort";
       break;
-    case PLATFORM_ALERT_RETRY:
+    case PLUGIN_RETRY:
       string = "retry";
       break;
-    case PLATFORM_ALERT_IGNORE:
+    case PLUGIN_IGNORE:
       string = "ignore";
       break;
-    case PLATFORM_ALERT_TRY_AGAIN:
-      string = "tryAgain";
+    case PLUGIN_TRY_AGAIN:
+      string = "try_again";
       break;
-    case PLATFORM_ALERT_CONTINUE:
+    case PLUGIN_CONTINUE:
       string = "continue";
       break;
     case GTK_RESPONSE_NONE:
@@ -221,8 +200,8 @@ flutter_platform_alert_plugin_handle_method_call(
   const gchar* method = fl_method_call_get_name(method_call);
 
   g_autoptr(FlMethodResponse) response = nullptr;
-  if (strcmp(method, "playAlertSound") == 0) {
 
+  if (strcmp(method, "playAlertSound") == 0) {
     gtk_widget_error_bell((GtkWidget*)self->widget);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
   } else if (strcmp(method, "showAlert") == 0) {

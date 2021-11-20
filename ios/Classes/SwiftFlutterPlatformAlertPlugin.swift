@@ -10,7 +10,7 @@ fileprivate enum AlerButton: String {
     case noButton = "no"
     case okButton = "ok"
     case retryButton = "retry"
-    case tryAgainButton = "tryAgain"
+    case tryAgainButton = "try_again"
     case yesButton = "yes"
 }
 

@@ -9,7 +9,7 @@ fileprivate enum AlerButton: String {
   case noButton = "no"
   case okButton = "ok"
   case retryButton = "retry"
-  case tryAgainButton = "tryAgain"
+  case tryAgainButton = "try_again"
   case yesButton = "yes"
 }
 
@@ -125,11 +125,11 @@ fileprivate enum FlutterPlatformIconStyle: String {
 
     var alertStyle: NSAlert.Style {
         switch self {
-        case .exclamation, .error:
+        case .error, .hand, .stop:
             return .critical
-        case .warning, .asterisk, .question, .stop, .none:
+        case .exclamation, .warning, .question, .none:
             return .warning
-        case .information, .hand:
+        case .information, .asterisk:
             return .informational
         }
 

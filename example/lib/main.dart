@@ -38,13 +38,28 @@ class _MyAppState extends State<MyApp> {
                             onPressed: () async {
                               final result =
                                   await FlutterPlatformAlert.showAlert(
-                                windowTitle: 'This ia title',
-                                text: 'This is body',
+                                windowTitle: '白日依山盡 黃河入海流',
+                                text: '芋頭西米露 保力達蠻牛',
                                 iconStyle: IconStyle.exclamation,
                               );
                               print(result);
                             },
-                            child: const Text('Show exclamation style')),
+                            child: const Text('Show non-ascii characters')),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              final result =
+                                  await FlutterPlatformAlert.showAlert(
+                                windowTitle: 'This ia title',
+                                text: 'This is body',
+                                iconStyle: IconStyle.information,
+                              );
+                              print(result);
+                            },
+                            child: const Text('Show information style')),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -68,11 +83,11 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                 windowTitle: 'This ia title',
                                 text: 'This is body',
-                                iconStyle: IconStyle.information,
+                                iconStyle: IconStyle.error,
                               );
                               print(result);
                             },
-                            child: const Text('Show information style')),
+                            child: const Text('Show error style')),
                       ),
                       const Divider(),
                       Padding(
@@ -95,7 +110,7 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.okCancel);
+                                      alertStyle: AlertButtonStyle.okCancel);
                               print(result);
                             },
                             child: const Text('Show OK Cancel')),
@@ -108,7 +123,8 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.abortRetryIgnore);
+                                      alertStyle:
+                                          AlertButtonStyle.abortRetryIgnore);
                               print(result);
                             },
                             child: const Text('Show Abort Retry Ignore')),
@@ -121,7 +137,8 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.cancelTryContinue);
+                                      alertStyle:
+                                          AlertButtonStyle.cancelTryContinue);
                               print(result);
                             },
                             child: const Text('Show Cancel Try Continue')),
@@ -134,7 +151,7 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.retryCancel);
+                                      alertStyle: AlertButtonStyle.retryCancel);
                               print(result);
                             },
                             child: const Text('Show Retry Cancel')),
@@ -147,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.yesNo);
+                                      alertStyle: AlertButtonStyle.yesNo);
                               print(result);
                             },
                             child: const Text('Show Yes No')),
@@ -160,7 +177,7 @@ class _MyAppState extends State<MyApp> {
                                   await FlutterPlatformAlert.showAlert(
                                       windowTitle: 'This ia title',
                                       text: 'This is body',
-                                      alertStyle: AlertStyle.yesNoCancel);
+                                      alertStyle: AlertButtonStyle.yesNoCancel);
                               print(result);
                             },
                             child: const Text('Show Yes No Cancel')),

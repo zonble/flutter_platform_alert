@@ -2,56 +2,158 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-enum FlutterPlatformAlerButton {
+/// Represents the button that a user clicks on.
+enum AlertButton {
+  /// The "abort" buitton.
   abortButton,
+
+  /// The "cancel" buitton.
   cancelButton,
+
+  /// The "continue" buitton.
   continueButton,
+
+  /// The "ignore" buitton.
   ignoreButton,
+
+  /// The "no" buitton.
   noButton,
+
+  /// The "ok" buitton.
   okButton,
+
+  /// The "retry" buitton.
   retryButton,
+
+  /// The "try again" buitton.
   tryAgainButton,
+
+  /// The "yes" buitton.
   yesButton,
+
+  /// Other unknown button.
+  other,
 }
 
-enum AlertStyle {
+AlertButton _stringToAlertButton(String string) {
+  switch (string) {
+    case "abort":
+      return AlertButton.abortButton;
+    case "cancel":
+      return AlertButton.cancelButton;
+    case "continue":
+      return AlertButton.continueButton;
+    case "ignore":
+      return AlertButton.ignoreButton;
+    case "no":
+      return AlertButton.noButton;
+    case "ok":
+      return AlertButton.okButton;
+    case "retry":
+      return AlertButton.retryButton;
+    case "try_again":
+      return AlertButton.tryAgainButton;
+    case "yes":
+      return AlertButton.yesButton;
+    default:
+      break;
+  }
+  return AlertButton.other;
+}
+
+/// Represents the buttons in the dialog/alert.
+enum AlertButtonStyle {
+  /// Abort, retry, and ignore.
   abortRetryIgnore,
+
+  /// Cancel, try again and continue.
   cancelTryContinue,
+
+  /// Only OK in the dialog.
   ok,
+
+  /// OK and cancel.
   okCancel,
+
+  /// Retry and cancel.
   retryCancel,
+
+  /// Yes and no.
   yesNo,
+
+  /// Yes, no and cancel.
   yesNoCancel,
 }
 
-String _alertStyleToString(AlertStyle style) {
+String _alertStyleToString(AlertButtonStyle style) {
   switch (style) {
-    case AlertStyle.abortRetryIgnore:
+    case AlertButtonStyle.abortRetryIgnore:
       return 'abortRetryIgnore';
-    case AlertStyle.cancelTryContinue:
+    case AlertButtonStyle.cancelTryContinue:
       return 'cancelTryContinue';
-    case AlertStyle.ok:
+    case AlertButtonStyle.ok:
       return 'ok';
-    case AlertStyle.okCancel:
+    case AlertButtonStyle.okCancel:
       return 'okCancel';
-    case AlertStyle.retryCancel:
+    case AlertButtonStyle.retryCancel:
       return 'retryCancel';
-    case AlertStyle.yesNo:
+    case AlertButtonStyle.yesNo:
       return 'yesNo';
-    case AlertStyle.yesNoCancel:
+    case AlertButtonStyle.yesNoCancel:
       return 'yesNoCancel';
   }
 }
 
+/// Represents the icon that appears in the dialog/alert.
 enum IconStyle {
+  /// No icon.
   none,
+
+  /// Represents showing a icon for errors.
+  ///
+  /// - MB_ICONEXCLAMATION on Windows.
+  /// - GTK_MESSAGE_WARNING on Linux.
   exclamation,
+
+  /// Represents showing a icon for errors.
+  ///
+  /// - MB_ICONWARNING on Windows.
+  /// - GTK_MESSAGE_WARNING on Linux.
   warning,
+
+  /// Represents showing a icon with a letter "i".
+  ///
+  /// - MB_ICONINFORMATION on Windows.
+  /// - GTK_MESSAGE_INFO on Linux.
   information,
+
+  /// Represents showing a icon with a letter "i".
+  ///
+  /// - MB_ICONASTERISK on Windows.
+  /// - GTK_MESSAGE_INFO on Linux.
   asterisk,
+
+  /// Represents showing a question icon.
+  ///
+  /// - MB_ICONQUESTION on Windows.
+  /// - GTK_MESSAGE_QUESTION on Linux.
   question,
+
+  /// Represents showing a stop or error icon.
+  ///
+  /// - MB_ICONSTOP on Windows.
+  /// - GTK_MESSAGE_ERROR on Linux.
   stop,
+
+  /// Represents showing a stop or error icon.
+  ///
+  /// - MB_ICONERROR on Windows
+  /// - GTK_MESSAGE_ERROR on Linux.
   error,
+
+  /// Represents showing a stop or error icon.
+  /// - MB_ICONHAND on Windows.
+  /// - GTK_MESSAGE_ERROR on Linux.
   hand,
 }
 
@@ -81,14 +183,18 @@ String _iconStyleToString(IconStyle style) {
 class FlutterPlatformAlert {
   static const MethodChannel _channel = MethodChannel('flutter_platform_alert');
 
+  /// Plays the system alert sound.
+  ///
+  /// It makes an iPhone to virbate on iOS.
   static Future<void> playAlertSound() async {
     await _channel.invokeMethod('playAlertSound');
   }
 
-  static Future<String> showAlert({
+  /// Shows a platform dialog or alert.
+  static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
-    AlertStyle alertStyle = AlertStyle.ok,
+    AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
   }) async {
     final alertStyleString = _alertStyleToString(alertStyle);
@@ -99,11 +205,6 @@ class FlutterPlatformAlert {
       'alertStyle': alertStyleString,
       'iconStyleString': iconStyleString,
     });
-    return result;
+    return _stringToAlertButton(result);
   }
-
-// static Future<String?> get platformVersion async {
-//   final String? version = await _channel.invokeMethod('getPlatformVersion');
-//   return version;
-// }
 }
