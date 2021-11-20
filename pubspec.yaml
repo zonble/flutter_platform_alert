@@ -1,7 +1,7 @@
 name: flutter_platform_alert
 description: A simple plugin to present native alerts
 version: 0.1.0
-homepage:
+homepage: https://github.com/zonble/flutter_platform_alert
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
