@@ -6,7 +6,7 @@ A simple plugin to present native alerts, including playing alert sounds and
 showing alert dialogs. It uses following API to show play alert sound.
 
 - iOS: [AudioService](https://developer.apple.com/documentation/audiotoolbox/1405248-audioservicesplaysystemsound)
-- Android:
+- Android: [RingtoneManager](https://developer.android.com/reference/android/media/RingtoneManager)
 - Windows: [MessageBeep](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
 - macOS: [NSSound](https://developer.apple.com/documentation/appkit/nssound/2903487-beep)
 - Linux: [gtk_widget_error_bell](https://docs.gtk.org/gtk3/method.Widget.error_bell.html)

@@ -32,9 +32,9 @@ flutter:
         pluginClass: FlutterPlatformAlertPlugin
       linux:
         pluginClass: FlutterPlatformAlertPlugin
-      web:
-        pluginClass: FlutterPlatformAlertWeb
-        fileName: flutter_platform_alert_web.dart
+      # web:
+      #   pluginClass: FlutterPlatformAlertWeb
+      #   fileName: flutter_platform_alert_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

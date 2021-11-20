@@ -40,7 +40,6 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val windowTitle = args.getOrDefault("windowTitle", "")
           val text = args.getOrDefault("text", "")
           val alertStyle = args.getOrDefault("alertStyle", "ok")
-          val iconStyle = args.getOrDefault("iconStyle", "none")
 
           AlertDialog.Builder(
             this.activity,

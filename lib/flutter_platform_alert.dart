@@ -180,6 +180,7 @@ String _iconStyleToString(IconStyle style) {
   }
 }
 
+/// Helps to play platform alert sound and show platform alert dialogs.
 class FlutterPlatformAlert {
   static const MethodChannel _channel = MethodChannel('flutter_platform_alert');
 
@@ -191,6 +192,13 @@ class FlutterPlatformAlert {
   }
 
   /// Shows a platform dialog or alert.
+  ///
+  /// Just assign a [windowTitle] and [text], and it will shows the platform
+  /// dialog/alert. Once a user click on one of the button on it, the method
+  /// returns the name of the button.
+  ///
+  /// Please note that [iconStyle] is not implemented on mobile platforms like
+  /// iOS and Android.
   static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
