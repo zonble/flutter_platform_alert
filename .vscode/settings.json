@@ -1,0 +1,7 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/example/linux",
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+      "cstring": "cpp"
+    }
+  }

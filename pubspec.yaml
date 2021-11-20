@@ -35,6 +35,8 @@ flutter:
         pluginClass: FlutterPlatformAlertPlugin
       windows:
         pluginClass: FlutterPlatformAlertPlugin
+      linux:
+        pluginClass: FlutterPlatformAlertPlugin
       web:
         pluginClass: FlutterPlatformAlertWeb
         fileName: flutter_platform_alert_web.dart

@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Flutter",
+        "cwd": "example",
+        "request": "launch",
+        "type": "dart"
+      },
+      {
+        "name": "Debug native",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/example/build/linux/x64/debug/bundle/myapp_example",
+        "cwd": "${workspaceFolder}"
+      }
+    ]
+  }
