@@ -68,7 +68,7 @@ jobs:
       working-directory: ${{ github.workspace }}/flutter_platform_alert/example
     - name: Build iOS
       if: startsWith(matrix.os, 'macOS')
-      run: flutter build ipa
+      run: flutter build ios --debug --no-codesign --simulator
       working-directory: ${{ github.workspace }}/flutter_platform_alert/example
     - name: Build Linux
       if: startsWith(matrix.os, 'ubuntu')
