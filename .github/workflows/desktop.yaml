@@ -1,5 +1,5 @@
 
-name: Desktop
+name: CI
 
 on: [push, pull_request]	
 
@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2	
       with:
-        path: fde
+        path: flutter_platform_alert
     - uses: actions/checkout@v2	
       with:	
         path: flutter
@@ -55,7 +55,21 @@ jobs:
       run: flutter doctor -v
     - name: Install dependencies
       run: flutter packages get
-      working-directory: ./example
+      working-directory: ${{ github.workspace }}/flutter_platform_alert/example
     - name: Build Android APK
       run: flutter build apk
-      working-directory: ./example
+      working-directory: ${{ github.workspace }}/flutter_platform_alert/example
+    - name: Build macOS
+      if: startsWith(matrix.os, 'macOS')
+      run: flutter build macOS
+      working-directory: ${{ github.workspace }}/flutter_platform_alert/example
+    - name: Build Linux
+      if: startsWith(matrix.os, 'ubuntu')
+      run: flutter build linux
+      working-directory: ${{ github.workspace }}/flutter_platform_alert/example
+    - name: Build Windows
+      if: startsWith(matrix.os, 'windows')
+      run: flutter build windows
+      working-directory: ${{ github.workspace }}/flutter_platform_alert/example
+
+
