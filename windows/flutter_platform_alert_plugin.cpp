@@ -35,7 +35,7 @@ Utf16FromUtf8(const std::string& utf8_string)
                           MB_ERR_INVALID_CHARS,
                           utf8_string.data(),
                           static_cast<int>(utf8_string.length()),
-                          utf16_string.data(),
+                          (LPWSTR)utf16_string.data(),
                           target_length);
   if (converted_length == 0) {
     return std::wstring();
@@ -114,7 +114,7 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
       GetStringArgument(method_call, "iconStyleString");
 
     std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
-    std::wstring textUtf16 = Utf16FromUtf8(windowTitle.c_str());
+    std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
 
     UINT alertType = MB_OK;
     if (alertStyle == "abortRetryIgnore") {
@@ -153,8 +153,8 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
     }
 
     int msgboxid = MessageBox(NULL,
-                              (LPCWSTR)windowTitleUtf16.c_str(),
                               (LPCWSTR)textUtf16.c_str(),
+                              (LPCWSTR)windowTitleUtf16.c_str(),
                               alertType | iconStyle);
 
     std::string response;

@@ -127,6 +127,10 @@ Android 11 on Samsung phone
 
 ![Android](screenshot_android.jpg)
 
+Windows 10
+
+![Windows](screenshot_windows.png)
+
 Ubuntu 21.10
 
 ![linux](screenshot_linux.png)
