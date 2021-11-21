@@ -82,6 +82,9 @@ and it provides following styles:
 - Yes and no
 - Yes, no, and cancel
 
+Since each platform has its own conventions, the order of these buttons are not
+guaranteed to be the same.
+
 ### Icon Styles
 
 The package also follow the API design of MessageBox on Windows to add icons to
@@ -126,12 +129,12 @@ The package in released under MIT License.
 
 Android 11 on Samsung phone
 
-![Android](screenshot_android.jpg)
+![Android](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_android.jpg)
 
 Windows 10
 
-![Windows](screenshot_windows.png)
+![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows.png)
 
 Ubuntu 21.10
 
-![linux](screenshot_linux.png)
+![linux](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_linux.png)
