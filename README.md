@@ -120,3 +120,7 @@ language.
 ## License
 
 The package in released under MIT License.
+
+## Screenshots
+
+![linux](screenshot_linux.png)
