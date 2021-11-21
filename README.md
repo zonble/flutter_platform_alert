@@ -26,7 +26,8 @@ It uses following API to show alert dialogs.
 
 - iOS: [UIAlertController](https://developer.apple.com/documentation/uikit/uialertcontroller) (It requires iOS 8)
 - Android: [AlertDialog](https://developer.android.com/reference/android/app/AlertDialog)
-- Windows: [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox)
+- Windows: [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox) and
+  [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
 - macOS: [NSAlert](https://developer.apple.com/documentation/appkit/nsalert)
 - Linux: [GtkMessageDialog](https://docs.gtk.org/gtk3/class.MessageDialog.html)
 

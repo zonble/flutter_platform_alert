@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
                                 windowTitle: '白日依山盡 黃河入海流',
                                 text: '芋頭西米露 保力達蠻牛',
                                 iconStyle: IconStyle.exclamation,
+                                alertStyle: AlertButtonStyle.abortRetryIgnore,
+                                preferMessageBoxOnWindows: true,
                               );
                               print(result);
                             },

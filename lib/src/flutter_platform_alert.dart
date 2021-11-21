@@ -23,11 +23,15 @@ class FlutterPlatformAlert {
   ///
   /// Please note that [iconStyle] is not implemented on mobile platforms like
   /// iOS and Android.
+  ///
+  /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
+  /// instead of   on Windows.
   static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
+    bool preferMessageBoxOnWindows = false,
   }) async {
     final alertStyleString = alertStyleToString(alertStyle);
     final iconStyleString = iconStyleToString(iconStyle);
@@ -36,6 +40,7 @@ class FlutterPlatformAlert {
       'text': text,
       'alertStyle': alertStyleString,
       'iconStyle': iconStyleString,
+      'preferMessageBox': preferMessageBoxOnWindows,
     });
     return stringToAlertButton(result);
   }
