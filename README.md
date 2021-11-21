@@ -30,6 +30,14 @@ It uses following API to show alert dialogs.
 - macOS: [NSAlert](https://developer.apple.com/documentation/appkit/nsalert)
 - Linux: [GtkMessageDialog](https://docs.gtk.org/gtk3/class.MessageDialog.html)
 
+The package was developed and tested on
+
+- iOS 15
+- Android 11
+- macOS 11 Big Sur / Xcode 13
+- Windows 10 / Visual Studio Community 2019
+- Ubuntu 21.10
+
 ## Getting Started
 
 - Add the dependency to your pubspec.yaml file by `flutter pub add flutter_platform_alert`.
@@ -99,6 +107,15 @@ works in your app.
 - On Linux, we use [gettext](https://www.gnu.org/software/gettext/) to localize
   apps. Please update the PO files in your projects once you integrate the
   plugin.
+
+Android apps embeds resources for localized strings. The localized strings files
+for the project are located under
+[android/src/main/res](https://github.com/zonble/flutter_platform_alert/tree/main/android/src/main/res).
+Once you need to add new languages, just fork the project and put your files
+under the folder.
+
+On Windows, the buttons on the message boxes will be in the Windows system
+language.
 
 ## License
 
