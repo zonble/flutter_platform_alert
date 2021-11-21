@@ -29,7 +29,28 @@ class _MyAppState extends State<MyApp> {
                             onPressed: () async {
                               await FlutterPlatformAlert.playAlertSound();
                             },
-                            child: const Text('Play Alert Sound')),
+                            child: const Text('Play Alert Sound (Default)')),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              await FlutterPlatformAlert.playAlertSound(
+                                iconStyle: IconStyle.exclamation,
+                              );
+                            },
+                            child:
+                                const Text('Play Alert Sound (exclamation)')),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              await FlutterPlatformAlert.playAlertSound(
+                                iconStyle: IconStyle.error,
+                              );
+                            },
+                            child: const Text('Play Alert Sound (error)')),
                       ),
                       const Divider(),
                       Padding(

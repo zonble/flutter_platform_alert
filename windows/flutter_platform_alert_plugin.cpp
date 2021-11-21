@@ -106,6 +106,7 @@ private:
                                          std::string iconStyleString);
 
   std::string StringFromMessageBoxID(int msgboxid);
+  int IconTypeFromString(std::string string);
 
   // A reference of the registrar in order to access the root window.
   flutter::PluginRegistrarWindows* registrar_;
@@ -163,6 +164,37 @@ FlutterPlatformAlertPlugin::StringFromMessageBoxID(int msgboxid)
   return response;
 }
 
+int FlutterPlatformAlertPlugin::IconTypeFromString(std::string iconStyleString)
+{
+  int iconStyle = 0;
+  if (iconStyleString == "exclamation") {
+    iconStyle = MB_ICONEXCLAMATION;
+  }
+  else if (iconStyleString == "warning") {
+    iconStyle = MB_ICONWARNING;
+  }
+  else if (iconStyleString == "information") {
+    iconStyle = MB_ICONINFORMATION;
+  }
+  else if (iconStyleString == "asterisk") {
+    iconStyle = MB_ICONASTERISK;
+  }
+  else if (iconStyleString == "question") {
+    iconStyle = MB_ICONQUESTION;
+  }
+  else if (iconStyleString == "stop") {
+    iconStyle = MB_ICONSTOP;
+  }
+  else if (iconStyleString == "error") {
+    iconStyle = MB_ICONERROR;
+  }
+  else if (iconStyleString == "hand") {
+    iconStyle = MB_ICONHAND;
+  }
+
+  return iconStyle;
+}
+
 std::string
 FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
                                                std::wstring textUtf16,
@@ -186,25 +218,7 @@ FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
     alertType = MB_YESNOCANCEL;
   }
 
-  UINT iconStyle = 0;
-  if (iconStyleString == "exclamation") {
-    iconStyle = MB_ICONEXCLAMATION;
-  } else if (iconStyleString == "warning") {
-    iconStyle = MB_ICONWARNING;
-  } else if (iconStyleString == "information") {
-    iconStyle = MB_ICONINFORMATION;
-  } else if (iconStyleString == "asterisk") {
-    iconStyle = MB_ICONASTERISK;
-  } else if (iconStyleString == "question") {
-    iconStyle = MB_ICONQUESTION;
-  } else if (iconStyleString == "stop") {
-    iconStyle = MB_ICONSTOP;
-  } else if (iconStyleString == "error") {
-    iconStyle = MB_ICONERROR;
-  } else if (iconStyleString == "hand") {
-    iconStyle = MB_ICONHAND;
-  }
-
+  UINT iconStyle = IconTypeFromString(iconStyleString);
   auto hwnd = registrar_->GetView()->GetNativeWindow();
 
   int msgboxid = MessageBox(hwnd,
@@ -283,12 +297,14 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
   std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result)
 {
   if (method_call.method_name().compare("playAlertSound") == 0) {
-    MessageBeep(MB_ICONASTERISK);
+    std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
+    UINT iconStyle = IconTypeFromString(iconStyleString);
+    MessageBeep(iconStyle);
     result->Success();
   } else if (method_call.method_name().compare("showAlert") == 0) {
     std::string windowTitle = GetStringArgument(method_call, "windowTitle");
     std::string text = GetStringArgument(method_call, "text");
-    std::string alertStyle = GetStringArgument(method_call, "alertStyle");
+    std::string alertStyleString = GetStringArgument(method_call, "alertStyle");
     std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
     bool preferMessageBox = GetBoolArgument(method_call, "preferMessageBox");
 
@@ -299,11 +315,11 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
 
     if (preferMessageBox) {
       response = ShowWithMessageBox(
-        windowTitleUtf16, textUtf16, alertStyle, iconStyleString);
+        windowTitleUtf16, textUtf16, alertStyleString, iconStyleString);
     }
     else {
       response = ShowWithTaskDialogIndirect(
-        windowTitleUtf16, textUtf16, alertStyle, iconStyleString);
+        windowTitleUtf16, textUtf16, alertStyleString, iconStyleString);
     }   
     result->Success(EncodableValue(response.c_str()));
   } else {
