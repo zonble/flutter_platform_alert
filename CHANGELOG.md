@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Fixes issues on Windows.
+
 ## 0.1.2
 
 - Tunes Android build settings.
