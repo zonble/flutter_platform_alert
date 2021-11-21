@@ -71,6 +71,7 @@ private:
   void HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue>& method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+  flutter::PluginRegistrarWindows* registrar_;
 };
 
 // static
@@ -91,6 +92,7 @@ FlutterPlatformAlertPlugin::RegisterWithRegistrar(
       plugin_pointer->HandleMethodCall(call, std::move(result));
     });
 
+  plugin->registrar_ = registrar;
   registrar->AddPlugin(std::move(plugin));
 }
 
@@ -110,8 +112,7 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
     std::string windowTitle = GetStringArgument(method_call, "windowTitle");
     std::string text = GetStringArgument(method_call, "text");
     std::string alertStyle = GetStringArgument(method_call, "alertStyle");
-    std::string iconStyleString =
-      GetStringArgument(method_call, "iconStyleString");
+    std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
 
     std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
     std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
@@ -152,7 +153,9 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
       iconStyle = MB_ICONHAND;
     }
 
-    int msgboxid = MessageBox(NULL,
+    auto hwnd = registrar_->GetView()->GetNativeWindow();
+
+    int msgboxid = MessageBox(hwnd,
                               (LPCWSTR)textUtf16.c_str(),
                               (LPCWSTR)windowTitleUtf16.c_str(),
                               alertType | iconStyle);
