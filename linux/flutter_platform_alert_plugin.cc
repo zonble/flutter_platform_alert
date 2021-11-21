@@ -70,8 +70,12 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
   g_autofree gchar* icon_style = get_string_value(args, "iconStyle", &error);
 
   GtkMessageType messageType = GTK_MESSAGE_OTHER;
-  if (strcmp(icon_style, "error") == 0 || strcmp(icon_style, "hand") == 0 ||
-      strcmp(icon_style, "stop") == 0) {
+
+  if (icon_style == nullptr) {
+    messageType = GTK_MESSAGE_OTHER;
+  } else if (strcmp(icon_style, "error") == 0 ||
+             strcmp(icon_style, "hand") == 0 ||
+             strcmp(icon_style, "stop") == 0) {
     messageType = GTK_MESSAGE_ERROR;
   } else if (strcmp(icon_style, "exclamation") == 0 ||
              strcmp(icon_style, "warning") == 0) {
@@ -93,7 +97,9 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
   gtk_message_dialog_format_secondary_text(
     GTK_MESSAGE_DIALOG(dialog), text, NULL);
 
-  if (strcmp(alert_style, "abortRetryIgnore") == 0) {
+  if (alert_style == nullptr) {
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), GTK_RESPONSE_OK);
+  } else if (strcmp(alert_style, "abortRetryIgnore") == 0) {
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Abort"), PLUGIN_ABORT);
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Retry"), PLUGIN_RETRY);
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("Ignore"), PLUGIN_IGNORE);

@@ -35,7 +35,7 @@ class FlutterPlatformAlert {
       'windowTitle': windowTitle,
       'text': text,
       'alertStyle': alertStyleString,
-      'iconStyleString': iconStyleString,
+      'iconStyle': iconStyleString,
     });
     return stringToAlertButton(result);
   }
