@@ -123,4 +123,10 @@ The package in released under MIT License.
 
 ## Screenshots
 
+Android 11 on Samsung phone
+
+![Android](screenshot_android.jpg)
+
+Ubuntu 21.10
+
 ![linux](screenshot_linux.png)
