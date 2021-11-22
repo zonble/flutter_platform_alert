@@ -129,7 +129,7 @@ The package in released under MIT License.
 
 iOS 15 in Simulator
 
-![iOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_ios.jpg)
+![iOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_ios.png)
 
 Android 11 on Samsung phone
 
@@ -137,7 +137,7 @@ Android 11 on Samsung phone
 
 macOS 12 Monterey
 
-![macOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_macos.jpg)
+![macOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_macos.png)
 
 Windows 10
 
