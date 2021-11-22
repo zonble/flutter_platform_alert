@@ -14,6 +14,12 @@ fileprivate enum AlerButton: String {
     case yesButton = "yes"
 }
 
+fileprivate enum CustomAlerButton: String {
+  case positiveButton = "positive_button"
+  case negativeButton = "negative_button"
+  case neutralButton = "neutral_button"
+}
+
 fileprivate enum FlutterPlatformAlertStyle: String {
     case abortRetryIgnore
     case cancelTryContinue
@@ -92,13 +98,25 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+
+        func style(forButtonTitle button:String) -> UIAlertAction.Style {
+           switch button {
+           case NSLocalizedString("Cancel", comment: ""):
+               return .cancel
+           case NSLocalizedString("Abort", comment: ""):
+               return .destructive
+           default:
+               return .default
+           }
+        }
+
         switch call.method {
         case "playAlertSound":
             let systemSoundID: SystemSoundID = 4095
             AudioServicesPlaySystemSound(systemSoundID)
         case "showAlert":
             guard let args = call.arguments as? [AnyHashable:Any] else {
-                result(nil)
+                result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
                 return
             }
             let windowTitle = args["windowTitle"] as? String ?? ""
@@ -109,16 +127,7 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: buttons.count > 2 ? .actionSheet : .alert)
             for i in 0..<buttons.count {
                 let button = buttons[i]
-                let style: UIAlertAction.Style = {
-                    switch button {
-                    case NSLocalizedString("Cancel", comment: ""):
-                        return .cancel
-                    case NSLocalizedString("Abort", comment: ""):
-                        return .destructive
-                    default:
-                        return .default
-                    }
-                }()
+                let style = style(forButtonTitle: button)
                 let action = UIAlertAction(title: button, style: style) { action in
                     let actionResult = alertStyle.button(at: i)
                     result(actionResult.rawValue)
@@ -127,6 +136,46 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             }
             let root = UIApplication.shared.windows.first?.rootViewController
             root?.show(controller, sender: nil)
+
+        case "showCustomAlert":
+            guard let args = call.arguments as? [AnyHashable:Any] else {
+                result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
+                return
+            }
+            let windowTitle = args["windowTitle"] as? String ?? ""
+            let text = args["text"] as? String ?? ""
+
+            var actions = [UIAlertAction]()
+            if let positiveButton = args["positiveButtonTitle"] as? String,
+               positiveButton.isEmpty == false {
+                let style = style(forButtonTitle: positiveButton)
+                actions.append(UIAlertAction(title: positiveButton, style: style) { action in
+                    result(CustomAlerButton.positiveButton.rawValue)
+                })
+            }
+            if let neutralButton = args["neutralButtonTitle"] as? String,
+               neutralButton.isEmpty == false {
+                let style = style(forButtonTitle: neutralButton)
+                actions.append(UIAlertAction(title: neutralButton, style: style) { action in
+                    result(CustomAlerButton.neutralButton.rawValue)
+                })
+            }
+            if let negativeButton = args["negativeButtonTitle"] as? String,
+               negativeButton.isEmpty == false {
+                let style = style(forButtonTitle: negativeButton)
+                actions.append(UIAlertAction(title: negativeButton, style: style) { action in
+                    result(CustomAlerButton.negativeButton.rawValue)
+                })
+            }
+            let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: actions.count > 2 ? .actionSheet : .alert)
+            for action in actions {
+                controller.addAction(action)
+            }
+
+            let root = UIApplication.shared.windows.first?.rootViewController
+            root?.show(controller, sender: nil)
+
+
         default:
             result(FlutterMethodNotImplemented)
         }
