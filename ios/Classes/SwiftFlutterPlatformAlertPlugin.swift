@@ -127,8 +127,8 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: buttons.count > 2 ? .actionSheet : .alert)
             for i in 0..<buttons.count {
                 let button = buttons[i]
-                let style = style(forButtonTitle: button)
-                let action = UIAlertAction(title: button, style: style) { action in
+                let buttonStyle = style(forButtonTitle: button)
+                let action = UIAlertAction(title: button, style: buttonStyle) { action in
                     let actionResult = alertStyle.button(at: i)
                     result(actionResult.rawValue)
                 }
@@ -148,22 +148,22 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             var actions = [UIAlertAction]()
             if let positiveButton = args["positiveButtonTitle"] as? String,
                positiveButton.isEmpty == false {
-                let style = style(forButtonTitle: positiveButton)
-                actions.append(UIAlertAction(title: positiveButton, style: style) { action in
+                let buttonStyle = style(forButtonTitle: positiveButton)
+                actions.append(UIAlertAction(title: positiveButton, style: buttonStyle) { action in
                     result(CustomAlerButton.positiveButton.rawValue)
                 })
             }
             if let neutralButton = args["neutralButtonTitle"] as? String,
                neutralButton.isEmpty == false {
-                let style = style(forButtonTitle: neutralButton)
-                actions.append(UIAlertAction(title: neutralButton, style: style) { action in
+                let buttonStyle = style(forButtonTitle: neutralButton)
+                actions.append(UIAlertAction(title: neutralButton, style: buttonStyle) { action in
                     result(CustomAlerButton.neutralButton.rawValue)
                 })
             }
             if let negativeButton = args["negativeButtonTitle"] as? String,
                negativeButton.isEmpty == false {
-                let style = style(forButtonTitle: negativeButton)
-                actions.append(UIAlertAction(title: negativeButton, style: style) { action in
+                let buttonStyle = style(forButtonTitle: negativeButton)
+                actions.append(UIAlertAction(title: negativeButton, style: buttonStyle) { action in
                     result(CustomAlerButton.negativeButton.rawValue)
                 })
             }
