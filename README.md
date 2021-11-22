@@ -35,7 +35,7 @@ The package was developed and tested on
 
 - iOS 15
 - Android 11
-- macOS 11 Big Sur / Xcode 13
+- macOS 11 Big Sur and mac OS 12 Monterey / Xcode 13
 - Windows 10 / Visual Studio Community 2019
 - Ubuntu 21.10
 
@@ -127,9 +127,17 @@ The package in released under MIT License.
 
 ## Screenshots
 
+iOS 15 in Simulator
+
+![iOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_ios.jpg)
+
 Android 11 on Samsung phone
 
 ![Android](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_android.jpg)
+
+macOS 12 Monterey
+
+![macOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_macos.jpg)
 
 Windows 10
 
