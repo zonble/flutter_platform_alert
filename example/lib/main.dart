@@ -216,7 +216,9 @@ class _MyAppState extends State<MyApp> {
                                       text: 'This is body',
                                       positiveButtonTitle: "Positive",
                                       negativeButtonTitle: "Negative",
-                                      neutralButtonTitle: "Neutral");
+                                      neutralButtonTitle: "Neutral",
+                                      additionalWindowTitle: 'Window title',
+                                      showAsLinksOnWindows: true);
                               print(result);
                             },
                             child: const Text('Show Yes No Cancel')),

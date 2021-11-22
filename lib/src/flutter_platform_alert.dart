@@ -42,6 +42,7 @@ class FlutterPlatformAlert {
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
     bool preferMessageBoxOnWindows = false,
+    String? additionalWindowTitle,
   }) async {
     final alertStyleString = alertStyleToString(alertStyle);
     final iconStyleString = iconStyleToString(iconStyle);
@@ -51,6 +52,7 @@ class FlutterPlatformAlert {
       'alertStyle': alertStyleString,
       'iconStyle': iconStyleString,
       'preferMessageBox': preferMessageBoxOnWindows,
+      'additionalWindowTitle': additionalWindowTitle ?? '',
     });
     return stringToAlertButton(result);
   }
@@ -60,18 +62,22 @@ class FlutterPlatformAlert {
     required String windowTitle,
     required String text,
     IconStyle iconStyle = IconStyle.none,
-    String? positiveButtonTitle,
-    String? negativeButtonTitle,
-    String? neutralButtonTitle,
+    String? positiveButtonTitle = '',
+    String? negativeButtonTitle = '',
+    String? neutralButtonTitle = '',
+    bool showAsLinksOnWindows = false,
+    String? additionalWindowTitle = '',
   }) async {
     final iconStyleString = iconStyleToString(iconStyle);
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
+      'additionalWindowTitle': additionalWindowTitle ?? '',
       'iconStyle': iconStyleString,
-      'positiveButtonTitle': positiveButtonTitle,
-      'negativeButtonTitle': negativeButtonTitle,
-      'neutralButtonTitle': neutralButtonTitle,
+      'positiveButtonTitle': positiveButtonTitle ?? '',
+      'negativeButtonTitle': negativeButtonTitle ?? '',
+      'neutralButtonTitle': neutralButtonTitle ?? '',
+      'showAsLinksOnWindows': showAsLinksOnWindows,
     });
     return stringToCustomButton(result);
   }

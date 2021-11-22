@@ -56,9 +56,9 @@ GetStringArgument(const flutter::MethodCall<>& method_call, const char* name)
   std::string argument;
   const auto* arguments = std::get_if<EncodableMap>(method_call.arguments());
   if (arguments) {
-    auto url_it = arguments->find(EncodableValue(name));
-    if (url_it != arguments->end()) {
-      argument = std::get<std::string>(url_it->second);
+    auto it = arguments->find(EncodableValue(name));
+    if (it != arguments->end()) {
+      argument = std::get<std::string>(it->second);
     }
   }
   return argument;
@@ -96,17 +96,28 @@ private:
   // Shows an alert using MessageBox API.
   std::string ShowWithMessageBox(std::wstring windowTitleUtf16,
                                  std::wstring textUtf16,
-                                 std::string alertStyle,
+                                 std::string alertStyleString,
                                  std::string iconStyleString);
 
-  // Shows an alert using TaskDialogIndirect  API.
+  // Shows an alert using TaskDialogIndirect API.
   std::string ShowWithTaskDialogIndirect(std::wstring windowTitleUtf16,
                                          std::wstring textUtf16,
-                                         std::string alertStyle,
-                                         std::string iconStyleString);
+                                         std::string alertStyleString,
+                                         std::string iconStyleString,
+                                         std::wstring additionalWindowTitle);
 
   std::string StringFromMessageBoxID(int msgboxid);
   int IconTypeFromString(std::string string);
+
+  // Show an alert with custom buttons.
+  std::string ShowWithCustomButtons(std::wstring windowTitleUtf16,
+                                    std::wstring textUtf16,
+                                    std::string iconStyleString,
+                                    std::wstring positiveButton,
+                                    std::wstring negativeButton,
+                                    std::wstring neutralButton,
+                                    std::wstring additionalWindowTitle,
+                                    bool showAsLinks);
 
   // A reference of the registrar in order to access the root window.
   flutter::PluginRegistrarWindows* registrar_;
@@ -138,6 +149,10 @@ FlutterPlatformAlertPlugin::FlutterPlatformAlertPlugin() {}
 
 FlutterPlatformAlertPlugin::~FlutterPlatformAlertPlugin() {}
 
+static const int CUSTOM_POSITIVE = 101;
+static const int CUSTOM_NUETRAL = 102;
+static const int CUSTOM_NEGATIVE = 103;
+
 std::string
 FlutterPlatformAlertPlugin::StringFromMessageBoxID(int msgboxid)
 {
@@ -160,35 +175,36 @@ FlutterPlatformAlertPlugin::StringFromMessageBoxID(int msgboxid)
     response = "try_again";
   } else if (msgboxid == IDYES) {
     response = "yes";
+  } else if (msgboxid == CUSTOM_POSITIVE) {
+    response = "positive_button";
+  } else if (msgboxid == CUSTOM_NEGATIVE) {
+    response = "negative_button";
+  } else if (msgboxid == CUSTOM_NUETRAL) {
+    response = "neutral_button";
   }
+
   return response;
 }
 
-int FlutterPlatformAlertPlugin::IconTypeFromString(std::string iconStyleString)
+int
+FlutterPlatformAlertPlugin::IconTypeFromString(std::string iconStyleString)
 {
   int iconStyle = 0;
   if (iconStyleString == "exclamation") {
     iconStyle = MB_ICONEXCLAMATION;
-  }
-  else if (iconStyleString == "warning") {
+  } else if (iconStyleString == "warning") {
     iconStyle = MB_ICONWARNING;
-  }
-  else if (iconStyleString == "information") {
+  } else if (iconStyleString == "information") {
     iconStyle = MB_ICONINFORMATION;
-  }
-  else if (iconStyleString == "asterisk") {
+  } else if (iconStyleString == "asterisk") {
     iconStyle = MB_ICONASTERISK;
-  }
-  else if (iconStyleString == "question") {
+  } else if (iconStyleString == "question") {
     iconStyle = MB_ICONQUESTION;
-  }
-  else if (iconStyleString == "stop") {
+  } else if (iconStyleString == "stop") {
     iconStyle = MB_ICONSTOP;
-  }
-  else if (iconStyleString == "error") {
+  } else if (iconStyleString == "error") {
     iconStyle = MB_ICONERROR;
-  }
-  else if (iconStyleString == "hand") {
+  } else if (iconStyleString == "hand") {
     iconStyle = MB_ICONHAND;
   }
 
@@ -231,17 +247,22 @@ FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
 
 std::string
 FlutterPlatformAlertPlugin::ShowWithTaskDialogIndirect(
-  std::wstring windowTitleUtf16,
-  std::wstring textUtf16,
+  std::wstring windowTitle,
+  std::wstring text,
   std::string alertStyle,
-  std::string iconStyleString)
+  std::string iconStyle,
+  std::wstring additionalWindowTitle)
 {
 
   TASKDIALOGCONFIG config = { 0 };
   config.cbSize = sizeof(config);
-  config.pszMainInstruction = windowTitleUtf16.c_str();
-  config.pszContent = textUtf16.c_str();
+  config.pszMainInstruction = windowTitle.c_str();
+  config.pszContent = text.c_str();
   config.dwFlags = TDF_POSITION_RELATIVE_TO_WINDOW;
+
+  if (!additionalWindowTitle.empty()) {
+    config.pszWindowTitle = additionalWindowTitle.c_str();
+  }
 
   if (alertStyle == "abortRetryIgnore") {
     const TASKDIALOG_BUTTON buttons[] = {
@@ -271,6 +292,70 @@ FlutterPlatformAlertPlugin::ShowWithTaskDialogIndirect(
   } else if (alertStyle == "yesNoCancel") {
     config.dwCommonButtons =
       TDCBF_YES_BUTTON | TDCBF_NO_BUTTON | TDCBF_NO_BUTTON;
+  }
+
+  if (iconStyle == "error" || iconStyle == "hand" || iconStyle == "stop") {
+    config.pszMainIcon = TD_ERROR_ICON;
+  } else if (iconStyle == "exclamation" || iconStyle == "warning") {
+    config.pszMainIcon = TD_WARNING_ICON;
+  } else if (iconStyle == "information" || iconStyle == "asterisk" ||
+             iconStyle == "question") {
+    config.pszMainIcon = TD_INFORMATION_ICON;
+  }
+
+  auto hwnd = registrar_->GetView()->GetNativeWindow();
+  config.hwndParent = hwnd;
+
+  int nButtonPressed = 0;
+  TaskDialogIndirect(&config, &nButtonPressed, NULL, NULL);
+  return StringFromMessageBoxID(nButtonPressed);
+}
+
+std::string
+FlutterPlatformAlertPlugin::ShowWithCustomButtons(
+  std::wstring windowTitleUtf16,
+  std::wstring textUtf16,
+  std::string iconStyleString,
+  std::wstring positiveButton,
+  std::wstring negativeButton,
+  std::wstring neutralButton,
+  std::wstring additionalWindowTitle,
+  bool showAsLinks)
+{
+  TASKDIALOGCONFIG config = { 0 };
+  config.cbSize = sizeof(config);
+  config.pszMainInstruction = windowTitleUtf16.c_str();
+  config.pszContent = textUtf16.c_str();
+  TASKDIALOG_FLAGS flags = TDF_POSITION_RELATIVE_TO_WINDOW;
+  if (showAsLinks) {
+    flags |= TDF_USE_COMMAND_LINKS;
+  }
+  config.dwFlags = flags;
+  if (!additionalWindowTitle.empty()) {
+    config.pszWindowTitle = additionalWindowTitle.c_str();
+  }
+
+  TASKDIALOG_BUTTON buttons[3];
+
+  int count = 0;
+  if (!positiveButton.empty()) {
+    buttons[count] = { CUSTOM_POSITIVE, positiveButton.c_str() };
+    count++;
+  }
+  if (!neutralButton.empty()) {
+    buttons[count] = { CUSTOM_NUETRAL, neutralButton.c_str() };
+    count++;
+  }
+  if (!negativeButton.empty()) {
+    buttons[count] = { CUSTOM_NEGATIVE, negativeButton.c_str() };
+    count++;
+  }
+
+  if (count) {
+    config.pButtons = buttons;
+    config.cButtons = count;
+  } else {
+    config.dwCommonButtons = TDCBF_OK_BUTTON;
   }
 
   if (iconStyleString == "error" || iconStyleString == "hand" ||
@@ -307,21 +392,61 @@ FlutterPlatformAlertPlugin::HandleMethodCall(
     std::string alertStyleString = GetStringArgument(method_call, "alertStyle");
     std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
     bool preferMessageBox = GetBoolArgument(method_call, "preferMessageBox");
+    std::string additionalWindowTitle =
+      GetStringArgument(method_call, "additionalWindowTitle");
 
     std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
     std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
+    std::wstring additionalWindowTitleUtf16 =
+      Utf16FromUtf8(additionalWindowTitle.c_str());
 
     std::string response;
 
     if (preferMessageBox) {
       response = ShowWithMessageBox(
         windowTitleUtf16, textUtf16, alertStyleString, iconStyleString);
+    } else {
+      response = ShowWithTaskDialogIndirect(windowTitleUtf16,
+                                            textUtf16,
+                                            alertStyleString,
+                                            iconStyleString,
+                                            additionalWindowTitleUtf16);
     }
-    else {
-      response = ShowWithTaskDialogIndirect(
-        windowTitleUtf16, textUtf16, alertStyleString, iconStyleString);
-    }   
     result->Success(EncodableValue(response.c_str()));
+
+  } else if (method_call.method_name().compare("showCustomAlert") == 0) {
+    std::string windowTitle = GetStringArgument(method_call, "windowTitle");
+    std::string text = GetStringArgument(method_call, "text");
+    std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
+    std::string positiveButton =
+      GetStringArgument(method_call, "positiveButtonTitle");
+    std::string negativeButton =
+      GetStringArgument(method_call, "negativeButtonTitle");
+    std::string neutralButton =
+      GetStringArgument(method_call, "neutralButtonTitle");
+    std::string additionalWindowTitle =
+      GetStringArgument(method_call, "additionalWindowTitle");
+    bool showAsLinksOnWindows =
+      GetBoolArgument(method_call, "showAsLinksOnWindows");
+
+    std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
+    std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
+    std::wstring positiveButtonUtf16 = Utf16FromUtf8(positiveButton.c_str());
+    std::wstring negativeButtonUtf16 = Utf16FromUtf8(negativeButton.c_str());
+    std::wstring neutralButtonUtf16 = Utf16FromUtf8(neutralButton.c_str());
+    std::wstring additionalWindowTitleUtf16 =
+      Utf16FromUtf8(additionalWindowTitle.c_str());
+
+    std::string response = ShowWithCustomButtons(windowTitleUtf16,
+                                                 textUtf16,
+                                                 iconStyleString,
+                                                 positiveButtonUtf16,
+                                                 negativeButtonUtf16,
+                                                 neutralButtonUtf16,
+                                                 additionalWindowTitleUtf16,
+                                                 showAsLinksOnWindows);
+    result->Success(EncodableValue(response.c_str()));
+
   } else {
     result->NotImplemented();
   }
