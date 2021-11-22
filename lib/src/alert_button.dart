@@ -56,3 +56,24 @@ AlertButton stringToAlertButton(String string) {
   }
   return AlertButton.other;
 }
+
+enum CustomButton {
+  positiveButton,
+  negativeButton,
+  neutralButton,
+  other,
+}
+
+CustomButton stringToCustomButton(String string) {
+  switch (string) {
+    case "positive_button":
+      return CustomButton.positiveButton;
+    case "negative_button":
+      return CustomButton.negativeButton;
+    case "neutral_button":
+      return CustomButton.neutralButton;
+    default:
+      break;
+  }
+  return CustomButton.other;
+}

@@ -21,12 +21,12 @@ dev_dependencies:
 flutter:
   plugin:
     platforms:
+      android:
+        package: net.zonble.flutter_platform_alert
+        pluginClass: FlutterPlatformAlertPlugin
       ios:
         pluginClass: FlutterPlatformAlertPlugin
       macos:
-        pluginClass: FlutterPlatformAlertPlugin
-      android:
-        package: net.zonble.flutter_platform_alert
         pluginClass: FlutterPlatformAlertPlugin
       windows:
         pluginClass: FlutterPlatformAlertPlugin

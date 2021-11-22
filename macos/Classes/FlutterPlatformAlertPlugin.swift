@@ -13,6 +13,12 @@ fileprivate enum AlerButton: String {
   case yesButton = "yes"
 }
 
+fileprivate enum CustomAlerButton: String {
+  case positiveButton = "positive_button"
+  case negativeButton = "negative_button"
+  case neutralButton = "neutral_button"
+}
+
 fileprivate enum FlutterPlatformAlertStyle: String {
     case abortRetryIgnore
     case cancelTryContinue
@@ -107,9 +113,7 @@ fileprivate enum FlutterPlatformAlertStyle: String {
                 return .yesButton
             }
         }
-
     }
-
 }
 
 fileprivate enum FlutterPlatformIconStyle: String {
@@ -148,16 +152,17 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
         case "playAlertSound":
             NSSound.beep()
             result(nil)
+
         case "showAlert":
             guard let args = call.arguments as? [AnyHashable:Any] else {
-                result(nil)
+                result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
                 return
             }
             let windowTitle = args["windowTitle"] as? String ?? ""
             let text = args["text"] as? String ?? ""
             let alertStyleString = args["alertStyle"] as? String ?? ""
             let alertStyle = FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
-            let iconStyleString = args["iconStyleString"] as? String ?? ""
+            let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
 
             let alert = NSAlert()
@@ -172,6 +177,61 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let modalResponse = alert.runModal()
             let alertButton = alertStyle.handle(response: modalResponse)
             result(alertButton.rawValue)
+
+        case "showCustomAlert":
+            guard let args = call.arguments as? [AnyHashable:Any] else {
+                result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
+                return
+            }
+            let windowTitle = args["windowTitle"] as? String ?? ""
+            let text = args["text"] as? String ?? ""
+            let iconStyleString = args["iconStyle"] as? String ?? ""
+            let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
+
+            let alert = NSAlert()
+            alert.messageText = windowTitle
+            alert.informativeText = text
+            alert.alertStyle = iconStyle.alertStyle
+
+            var index = 0
+            var buttons = [CustomAlerButton]()
+
+            if let positiveButton = args["positiveButtonTitle"] as? String,
+               positiveButton.isEmpty == false {
+                buttons.append(.positiveButton)
+                alert.addButton(withTitle: positiveButton)
+                index += 1
+            }
+            if let neutralButton = args["neutralButtonTitle"] as? String,
+               neutralButton.isEmpty == false {
+                buttons.append(.neutralButton)
+                alert.addButton(withTitle: neutralButton)
+                index += 1
+            }
+            if let negativeButton = args["negativeButtonTitle"] as? String,
+               negativeButton.isEmpty == false {
+                buttons.append(.negativeButton)
+                alert.addButton(withTitle: negativeButton)
+                index += 1
+            }
+            if buttons.isEmpty {
+                buttons.append(.positiveButton)
+                alert.addButton(withTitle: NSLocalizedString("OK", comment: ""))
+            }
+
+            let modalResponse = alert.runModal()
+            let map:[NSApplication.ModalResponse:Int] = [
+                .alertFirstButtonReturn: 0,
+                .alertSecondButtonReturn: 1,
+                .alertThirdButtonReturn: 2,
+            ]
+            if let index = map[modalResponse] {
+                let alertButton = buttons[index]
+                result(alertButton.rawValue)
+            } else {
+                result(nil)
+            }
+
         default:
             result(FlutterMethodNotImplemented)
         }

@@ -23,7 +23,7 @@ class FlutterPlatformAlert {
     });
   }
 
-  /// Shows a platform dialog or alert.
+  /// Shows a platform alert dialog.
   ///
   /// Just assign a [windowTitle] and [text], and it will shows the platform
   /// dialog/alert. Once a user click on one of the button on it, the method
@@ -53,5 +53,26 @@ class FlutterPlatformAlert {
       'preferMessageBox': preferMessageBoxOnWindows,
     });
     return stringToAlertButton(result);
+  }
+
+  /// Shows a platform alert dialog with custom button titles.
+  static Future<CustomButton> showCustomAlert({
+    required String windowTitle,
+    required String text,
+    IconStyle iconStyle = IconStyle.none,
+    String? positiveButtonTitle,
+    String? negativeButtonTitle,
+    String? neutralButtonTitle,
+  }) async {
+    final iconStyleString = iconStyleToString(iconStyle);
+    final result = await _channel.invokeMethod('showCustomAlert', {
+      'windowTitle': windowTitle,
+      'text': text,
+      'iconStyle': iconStyleString,
+      'positiveButtonTitle': positiveButtonTitle,
+      'negativeButtonTitle': negativeButtonTitle,
+      'neutralButtonTitle': neutralButtonTitle,
+    });
+    return stringToCustomButton(result);
   }
 }

@@ -205,6 +205,22 @@ class _MyAppState extends State<MyApp> {
                             },
                             child: const Text('Show Yes No Cancel')),
                       ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              final result =
+                                  await FlutterPlatformAlert.showCustomAlert(
+                                      windowTitle: 'This ia title',
+                                      text: 'This is body',
+                                      positiveButtonTitle: "Positive",
+                                      negativeButtonTitle: "Negative",
+                                      neutralButtonTitle: "Neutral");
+                              print(result);
+                            },
+                            child: const Text('Show Yes No Cancel')),
+                      ),
                     ]),
               ),
             )));
