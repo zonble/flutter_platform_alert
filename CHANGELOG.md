@@ -1,3 +1,7 @@
+## 0.1.5
+
+- Updates documentation and examples.
+
 ## 0.1.3
 
 - Fixes issues on Windows.
