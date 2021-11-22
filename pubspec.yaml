@@ -1,6 +1,6 @@
 name: flutter_platform_alert
 description: A simple plugin to present native alerts
-version: 0.1.5
+version: 0.1.6
 homepage: https://github.com/zonble/flutter_platform_alert
 
 environment:
@@ -32,9 +32,6 @@ flutter:
         pluginClass: FlutterPlatformAlertPlugin
       linux:
         pluginClass: FlutterPlatformAlertPlugin
-      # web:
-      #   pluginClass: FlutterPlatformAlertWeb
-      #   fileName: flutter_platform_alert_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
