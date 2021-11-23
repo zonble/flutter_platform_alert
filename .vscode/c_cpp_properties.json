@@ -12,18 +12,6 @@
 			"compileCommands": "${workspaceFolder}/build/compile_commands.json",
 			"configurationProvider": "ms-vscode.cmake-tools"
 		}
-    // ,
-		// {
-		// 	"name": "Windows",
-		// 	"includePath": [
-		// 		"${workspaceRoot}\\include",
-		// 		"${env.WindowsSdkDir}\\include\\${env.WindowsSDKVersion}\\ucrt",
-		// 		"${env.NETFXSDKDir}\\include\\um",
-		// 		"${env.WindowsSdkDir}\\include\\${env.WindowsSDKVersion}\\um",
-		// 		"${env.WindowsSdkDir}\\include\\${env.WindowsSDKVersion}\\shared",
-		// 		"${env.VCToolsInstallDir}\\include"
-		// 	]
-		// }
 	],
 	"version": 4
 }
