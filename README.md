@@ -65,13 +65,34 @@ final clickedButton = await FlutterPlatformAlert.showAlert(
 );
 ```
 
+To show an alert dialog with custom button titles:
+
+```dart
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+await FlutterPlatformAlert.playAlertSound();
+
+final clickedButton = await FlutterPlatformAlert.showCustomAlert(
+    windowTitle: 'This ia title',
+    text: 'This is body',
+    positiveButtonTitle: "Positive",
+    negativeButtonTitle: "Negative",
+    neutralButtonTitle: "Neutral",
+    additionalWindowTitleOnWindows: 'Window title',
+    showAsLinksOnWindows: true);
+```
+
 ## Platform Alert Dialogs
 
 ### Alert Styles
 
-You can specify the buttons listed in the alert dialog by passing `alertStyle`
-argument. The package follows the API design on Windows (see the reference of
-[MessageBox win32 API](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox)),
+When calling `showCustomAlert`, you can assign any button titles and use up to
+three buttons. Once there is no button title specified, it falls back to only an
+"OK" button.
+
+When calling `showAlert`, you can specify the buttons listed in the alert dialog
+by passing `alertStyle` argument. The package follows the API design on Windows
+(see the reference of [MessageBox win32
+API](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox)),
 and it provides following styles:
 
 - Abort, retry and ignore
@@ -96,7 +117,17 @@ but actually four:
 - Information icon
 - Question icon
 
-Please note that icons are not available on iOS and Android.
+Please note that these icons are not available on iOS and Android.
+
+### Themes/Dark or Light Mode
+
+On iOS and macOS, the alert dialogs follows the dark/light mode settings on
+users' system. On Linux, the alert dialogs are rendered with current GTK theme.
+On Windows, they are always in light mode even you choose to use dark mode on
+Windows 10 and Windows 11.
+
+On Android, the alert dialog uses the default theme of Material design
+(as Theme.Material.Dialog.Alert).
 
 ## Localization
 
@@ -139,7 +170,7 @@ macOS 12 Monterey
 
 ![macOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_macos.png)
 
-Windows 10
+Windows 10 with MessageBox API
 
 ![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows.png)
 
