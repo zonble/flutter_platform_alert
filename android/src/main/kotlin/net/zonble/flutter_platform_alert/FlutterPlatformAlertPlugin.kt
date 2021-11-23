@@ -22,6 +22,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   private var context: Context? = null
   private lateinit var channel: MethodChannel
 
+  @Suppress("UNCHECKED_CAST")
   @RequiresApi(Build.VERSION_CODES.N)
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result): Unit =
     when (call.method) {
@@ -70,6 +71,40 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
               else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
             }
           }.create().show()
+        }
+      }
+      "showCustomAlert" -> {
+        val args = call.arguments as? HashMap<String, String>
+        if (args == null) {
+          result.error("No args", "Args is a null object.", "")
+        } else {
+          val windowTitle = args.getOrDefault("windowTitle", "")
+          val text = args.getOrDefault("text", "")
+          val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "")
+          val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
+          val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
+          val builder = AlertDialog.Builder(
+            this.activity,
+            R.style.AlertDialogCustom
+          ).setTitle(windowTitle).setMessage(text)
+          var buttonCount = 0
+          if (positiveButtonTitle.isNotEmpty()) {
+            builder.setPositiveButton(positiveButtonTitle) { _, _ -> result.success("positive_button") }
+            buttonCount += 1
+          }
+          if (negativeButtonTitle.isNotEmpty()) {
+            builder.setNegativeButton(negativeButtonTitle) { _, _ -> result.success("negative_button") }
+            buttonCount += 1
+          }
+          if (negativeButtonTitle.isNotEmpty()) {
+            builder.setNeutralButton(neutralButtonTitle) { _, _ -> result.success("neutral_button") }
+            buttonCount += 1
+          }
+          if (buttonCount==0) {
+            builder.setPositiveButton("OK") { _, _ -> result.success("other") }
+            buttonCount += 1
+          }
+          builder.create().show()
         }
       }
       else -> result.notImplemented()
