@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Implements alerts with custom buttons.
+
 ## 0.1.5
 
 - Updates documentation and examples.
