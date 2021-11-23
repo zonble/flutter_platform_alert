@@ -10,25 +10,25 @@ macOS and Linux.
 
 ![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-![Mac OS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
 It uses following API to show play alert sound.
 
 - iOS: [AudioService](https://developer.apple.com/documentation/audiotoolbox/1405248-audioservicesplaysystemsound)
 - Android: [RingtoneManager](https://developer.android.com/reference/android/media/RingtoneManager)
-- Windows: [MessageBeep](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
 - macOS: [NSSound](https://developer.apple.com/documentation/appkit/nssound/2903487-beep)
+- Windows: [MessageBeep](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
 - Linux: [gtk_widget_error_bell](https://docs.gtk.org/gtk3/method.Widget.error_bell.html)
 
 It uses following API to show alert dialogs.
 
 - iOS: [UIAlertController](https://developer.apple.com/documentation/uikit/uialertcontroller) (It requires iOS 8)
 - Android: [AlertDialog](https://developer.android.com/reference/android/app/AlertDialog)
+- macOS: [NSAlert](https://developer.apple.com/documentation/appkit/nsalert)
 - Windows: [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox) and
   [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
-- macOS: [NSAlert](https://developer.apple.com/documentation/appkit/nsalert)
 - Linux: [GtkMessageDialog](https://docs.gtk.org/gtk3/class.MessageDialog.html)
 
 The package was developed and tested on

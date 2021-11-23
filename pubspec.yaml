@@ -1,5 +1,5 @@
 name: flutter_platform_alert
-description: A simple plugin to present native alerts
+description: A plugin helps to call native API to play alert sound and show alert dialogs. For example, it bridges MessageBox and TaskDialogIndirect on Windows.
 version: 0.1.6
 homepage: https://github.com/zonble/flutter_platform_alert
 
@@ -9,8 +9,6 @@ environment:
 
 dependencies:
   flutter:
-    sdk: flutter
-  flutter_web_plugins:
     sdk: flutter
 
 dev_dependencies:

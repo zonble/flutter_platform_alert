@@ -230,14 +230,21 @@ show_custom_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
     gtk_message_dialog_format_secondary_text(
         GTK_MESSAGE_DIALOG(dialog), text, NULL);
 
+    int button_count = 0;
     if (strlen(positive_button)) {
         gtk_dialog_add_button(GTK_DIALOG(dialog), positive_button, PLUGIN_POSITIVE);
+        button_count++;
     }
     if (strlen(neutral_button)) {
         gtk_dialog_add_button(GTK_DIALOG(dialog), neutral_button, PLUGIN_NEUTRAL);
+        button_count++;
     }
     if (strlen(negative_button)) {
         gtk_dialog_add_button(GTK_DIALOG(dialog), negative_button, PLUGIN_NEGATIVE);
+        button_count++;
+    }
+    if (!button_count) {
+        gtk_dialog_add_button(GTK_DIALOG(dialog), _("_OK"), PLUGIN_NEGATIVE);
     }
 
     gint selectedButton = gtk_dialog_run(GTK_DIALOG(dialog));

@@ -217,7 +217,7 @@ class _MyAppState extends State<MyApp> {
                                       positiveButtonTitle: "Positive",
                                       negativeButtonTitle: "Negative",
                                       neutralButtonTitle: "Neutral",
-                                      additionalWindowTitle: 'Window title',
+                                      additionalWindowTitleOnWindows: 'Window title',
                                       showAsLinksOnWindows: true);
                               print(result);
                             },

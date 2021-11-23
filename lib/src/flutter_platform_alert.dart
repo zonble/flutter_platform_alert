@@ -34,15 +34,16 @@ class FlutterPlatformAlert {
   /// play alert sounds and you don't need to call [playAlertSound] again.
   ///
   /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
-  /// instead of TaskDialogIndirect on Windows. Actually TaskDialogIndirect is a
-  /// newer API and looks much better than MessageBox.
+  /// instead of TaskDialogIndirect on Windows. When [preferMessageBoxOnWindows]
+  /// is true, you can also assign an [additionalWindowTitleOnWindows]. Actually
+  /// TaskDialogIndirect is a newer API and looks much better than MessageBox.
   static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
     bool preferMessageBoxOnWindows = false,
-    String? additionalWindowTitle,
+    String? additionalWindowTitleOnWindows,
   }) async {
     final alertStyleString = alertStyleToString(alertStyle);
     final iconStyleString = iconStyleToString(iconStyle);
@@ -52,12 +53,24 @@ class FlutterPlatformAlert {
       'alertStyle': alertStyleString,
       'iconStyle': iconStyleString,
       'preferMessageBox': preferMessageBoxOnWindows,
-      'additionalWindowTitle': additionalWindowTitle ?? '',
+      'additionalWindowTitle': additionalWindowTitleOnWindows ?? '',
     });
     return stringToAlertButton(result);
   }
 
   /// Shows a platform alert dialog with custom button titles.
+  ///
+  /// You can assign up to 3 buttons in the alert dialog. The method follows the
+  /// convention on Android. [positiveButtonTitle] is the title of the positive
+  /// button like for "OK" or "Yes",  [negativeButtonTitle] is the title for the
+  /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
+  /// other buttons.
+  ///
+  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on
+  /// Windows while calling TaskDialogIndirect API.
+  /// [additionalWindowTitleOnWindows] is also for TaskDialogIndirect on
+  /// Windows. The method only uses TaskDialogIndirect on Windows since
+  /// MessageBox does not support custom button titles.
   static Future<CustomButton> showCustomAlert({
     required String windowTitle,
     required String text,
@@ -66,13 +79,13 @@ class FlutterPlatformAlert {
     String? negativeButtonTitle = '',
     String? neutralButtonTitle = '',
     bool showAsLinksOnWindows = false,
-    String? additionalWindowTitle = '',
+    String? additionalWindowTitleOnWindows = '',
   }) async {
     final iconStyleString = iconStyleToString(iconStyle);
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
-      'additionalWindowTitle': additionalWindowTitle ?? '',
+      'additionalWindowTitle': additionalWindowTitleOnWindows ?? '',
       'iconStyle': iconStyleString,
       'positiveButtonTitle': positiveButtonTitle ?? '',
       'negativeButtonTitle': negativeButtonTitle ?? '',
