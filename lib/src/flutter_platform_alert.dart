@@ -5,6 +5,36 @@ import 'alert_button.dart';
 import 'alert_style.dart';
 import 'icon_style.dart';
 
+/// AAdditional options for FlutterPlatformAlert.
+class FlutterPlatformAlertOption {
+
+  /// The option only works on Windows.
+  ///
+  /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
+  /// instead of TaskDialogIndirect on Windows when calling
+  /// [FlutterPlatformAlert.showAlert]. When [preferMessageBoxOnWindows] is false,
+  /// you can also assign an [additionalWindowTitleOnWindows]. Actually
+  /// TaskDialogIndirect is a newer API and looks much better than MessageBox.
+  bool preferMessageBoxOnWindows = false;
+
+  /// The option only works on Windows.
+  ///
+  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on Windows
+  /// while calling TaskDialogIndirect API. The option is only available when
+  /// calling [FlutterPlatformAlert.showCustomAlert] but it does not work on
+  /// [FlutterPlatformAlert.showAlert].
+  bool showAsLinksOnWindows = false;
+
+  /// The option only works on Windows.
+  String? additionalWindowTitleOnWindows;
+
+  FlutterPlatformAlertOption({
+    this.preferMessageBoxOnWindows = false,
+    this.showAsLinksOnWindows = false,
+    this.additionalWindowTitleOnWindows,
+  });
+}
+
 /// Helps to play platform alert sound and show platform alert dialogs.
 class FlutterPlatformAlert {
   static const MethodChannel _channel = MethodChannel('flutter_platform_alert');
@@ -32,18 +62,12 @@ class FlutterPlatformAlert {
   /// Please note that [iconStyle] is not implemented on mobile platforms like
   /// iOS and Android. On Windows, setting [iconStyle] also makes the system to
   /// play alert sounds and you don't need to call [playAlertSound] again.
-  ///
-  /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
-  /// instead of TaskDialogIndirect on Windows. When [preferMessageBoxOnWindows]
-  /// is true, you can also assign an [additionalWindowTitleOnWindows]. Actually
-  /// TaskDialogIndirect is a newer API and looks much better than MessageBox.
   static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
-    bool preferMessageBoxOnWindows = false,
-    String? additionalWindowTitleOnWindows,
+    FlutterPlatformAlertOption? options,
   }) async {
     final alertStyleString = alertStyleToString(alertStyle);
     final iconStyleString = iconStyleToString(iconStyle);
@@ -52,8 +76,8 @@ class FlutterPlatformAlert {
       'text': text,
       'alertStyle': alertStyleString,
       'iconStyle': iconStyleString,
-      'preferMessageBox': preferMessageBoxOnWindows,
-      'additionalWindowTitle': additionalWindowTitleOnWindows ?? '',
+      'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
+      'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
     });
     return stringToAlertButton(result);
   }
@@ -65,12 +89,6 @@ class FlutterPlatformAlert {
   /// button like for "OK" or "Yes",  [negativeButtonTitle] is the title for the
   /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
   /// other buttons.
-  ///
-  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on
-  /// Windows while calling TaskDialogIndirect API.
-  /// [additionalWindowTitleOnWindows] is also for TaskDialogIndirect on
-  /// Windows. The method only uses TaskDialogIndirect on Windows since
-  /// MessageBox does not support custom button titles.
   static Future<CustomButton> showCustomAlert({
     required String windowTitle,
     required String text,
@@ -78,19 +96,18 @@ class FlutterPlatformAlert {
     String? positiveButtonTitle = '',
     String? negativeButtonTitle = '',
     String? neutralButtonTitle = '',
-    bool showAsLinksOnWindows = false,
-    String? additionalWindowTitleOnWindows = '',
+    FlutterPlatformAlertOption? options,
   }) async {
     final iconStyleString = iconStyleToString(iconStyle);
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
-      'additionalWindowTitle': additionalWindowTitleOnWindows ?? '',
       'iconStyle': iconStyleString,
       'positiveButtonTitle': positiveButtonTitle ?? '',
       'negativeButtonTitle': negativeButtonTitle ?? '',
       'neutralButtonTitle': neutralButtonTitle ?? '',
-      'showAsLinksOnWindows': showAsLinksOnWindows,
+      'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
+      'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
     });
     return stringToCustomButton(result);
   }
