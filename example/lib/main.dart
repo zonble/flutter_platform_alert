@@ -63,7 +63,8 @@ class _MyAppState extends State<MyApp> {
                                 text: '芋頭西米露 保力達蠻牛',
                                 iconStyle: IconStyle.exclamation,
                                 alertStyle: AlertButtonStyle.abortRetryIgnore,
-                                preferMessageBoxOnWindows: true,
+                                options: FlutterPlatformAlertOption(
+                                    preferMessageBoxOnWindows: true),
                               );
                               print(result);
                             },
@@ -212,13 +213,16 @@ class _MyAppState extends State<MyApp> {
                             onPressed: () async {
                               final result =
                                   await FlutterPlatformAlert.showCustomAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      positiveButtonTitle: "Positive",
-                                      negativeButtonTitle: "Negative",
-                                      neutralButtonTitle: "Neutral",
-                                      additionalWindowTitleOnWindows: 'Window title',
-                                      showAsLinksOnWindows: true);
+                                windowTitle: 'This ia title',
+                                text: 'This is body',
+                                positiveButtonTitle: "Positive",
+                                negativeButtonTitle: "Negative",
+                                neutralButtonTitle: "Neutral",
+                                options: FlutterPlatformAlertOption(
+                                    additionalWindowTitleOnWindows:
+                                        'Window title',
+                                    showAsLinksOnWindows: true),
+                              );
                               print(result);
                             },
                             child: const Text('Show Yes No Cancel')),
