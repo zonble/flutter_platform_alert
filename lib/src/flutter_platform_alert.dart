@@ -7,28 +7,37 @@ import 'icon_style.dart';
 
 /// AAdditional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
-  /// The option only works on Windows.
-  ///
   /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
   /// instead of TaskDialogIndirect on Windows when calling
-  /// [FlutterPlatformAlert.showAlert]. When [preferMessageBoxOnWindows] is false,
-  /// you can also assign an [additionalWindowTitleOnWindows]. Actually
-  /// TaskDialogIndirect is a newer API and looks much better than MessageBox.
-  bool preferMessageBoxOnWindows = false;
-
+  /// [FlutterPlatformAlert.showAlert].
+  ///
   /// The option only works on Windows.
   ///
+  /// When [preferMessageBoxOnWindows] is false, you can also assign an
+  /// [additionalWindowTitleOnWindows]. Actually TaskDialogIndirect is a newer
+  /// API and looks much better than MessageBox.
+  bool preferMessageBoxOnWindows = false;
+
   /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on Windows
   /// while calling TaskDialogIndirect API. The option is only available when
   /// calling [FlutterPlatformAlert.showCustomAlert] but it does not work on
   /// [FlutterPlatformAlert.showAlert].
+  ///
+  /// The option only works on Windows.
   bool showAsLinksOnWindows = false;
 
+  /// An additional window title.
+  ///
   /// The option only works on Windows.
   String? additionalWindowTitleOnWindows;
 
+  /// Represents if the alert dialog should be attached on a window instead of
+  /// showing a modal window.
+  ///
+  /// The option only works on Windows.
   bool runAsSheetOnMac = false;
 
+  /// Creates a new instance.
   FlutterPlatformAlertOption({
     this.preferMessageBoxOnWindows = false,
     this.showAsLinksOnWindows = false,
