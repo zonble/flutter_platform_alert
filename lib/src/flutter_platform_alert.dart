@@ -7,7 +7,6 @@ import 'icon_style.dart';
 
 /// AAdditional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
-
   /// The option only works on Windows.
   ///
   /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
@@ -28,10 +27,13 @@ class FlutterPlatformAlertOption {
   /// The option only works on Windows.
   String? additionalWindowTitleOnWindows;
 
+  bool runAsSheetOnMac = false;
+
   FlutterPlatformAlertOption({
     this.preferMessageBoxOnWindows = false,
     this.showAsLinksOnWindows = false,
     this.additionalWindowTitleOnWindows,
+    this.runAsSheetOnMac = false,
   });
 }
 
@@ -78,6 +80,7 @@ class FlutterPlatformAlert {
       'iconStyle': iconStyleString,
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
+      'runAsSheet': options?.runAsSheetOnMac ?? false,
     });
     return stringToAlertButton(result);
   }
@@ -108,6 +111,7 @@ class FlutterPlatformAlert {
       'neutralButtonTitle': neutralButtonTitle ?? '',
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
+      'runAsSheet': options?.runAsSheetOnMac ?? false,
     });
     return stringToCustomButton(result);
   }

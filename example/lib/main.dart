@@ -64,7 +64,9 @@ class _MyAppState extends State<MyApp> {
                                 iconStyle: IconStyle.exclamation,
                                 alertStyle: AlertButtonStyle.abortRetryIgnore,
                                 options: FlutterPlatformAlertOption(
-                                    preferMessageBoxOnWindows: true),
+                                  runAsSheetOnMac: true,
+                                  preferMessageBoxOnWindows: true,
+                                ),
                               );
                               print(result);
                             },

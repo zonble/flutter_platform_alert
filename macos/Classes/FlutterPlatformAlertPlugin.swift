@@ -164,6 +164,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let alertStyle = FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
             let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
+            let runAsSheet = args["runAsSheet"] as? Bool ?? false
 
             let alert = NSAlert()
             alert.messageText = windowTitle
@@ -174,9 +175,17 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 alert.addButton(withTitle: button)
             }
             alert.alertStyle = iconStyle.alertStyle
-            let modalResponse = alert.runModal()
-            let alertButton = alertStyle.handle(response: modalResponse)
-            result(alertButton.rawValue)
+            let window = NSApp.mainWindow
+            if runAsSheet, let window = window {
+                alert.beginSheetModal(for: window) { response in
+                    let alertButton = alertStyle.handle(response: response)
+                    result(alertButton.rawValue)
+                }
+            } else {
+                let modalResponse = alert.runModal()
+                let alertButton = alertStyle.handle(response: modalResponse)
+                result(alertButton.rawValue)
+            }
 
         case "showCustomAlert":
             guard let args = call.arguments as? [AnyHashable:Any] else {
@@ -187,6 +196,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let text = args["text"] as? String ?? ""
             let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
+            let runAsSheet = args["runAsSheet"] as? Bool ?? false
 
             let alert = NSAlert()
             alert.messageText = windowTitle
@@ -219,19 +229,29 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 alert.addButton(withTitle: NSLocalizedString("OK", comment: ""))
             }
 
-            let modalResponse = alert.runModal()
-            let map:[NSApplication.ModalResponse:Int] = [
-                .alertFirstButtonReturn: 0,
-                .alertSecondButtonReturn: 1,
-                .alertThirdButtonReturn: 2,
-            ]
-            if let index = map[modalResponse] {
-                let alertButton = buttons[index]
-                result(alertButton.rawValue)
-            } else {
-                result(nil)
+            func reponse(with modalResponse: NSApplication.ModalResponse) {
+                let map:[NSApplication.ModalResponse:Int] = [
+                    .alertFirstButtonReturn: 0,
+                    .alertSecondButtonReturn: 1,
+                    .alertThirdButtonReturn: 2,
+                ]
+                if let index = map[modalResponse] {
+                    let alertButton = buttons[index]
+                    result(alertButton.rawValue)
+                } else {
+                    result(nil)
+                }
             }
 
+            let window = NSApp.mainWindow
+            if runAsSheet, let window = window {
+                alert.beginSheetModal(for: window) { modalResponse in
+                    reponse(with: modalResponse)
+                }
+            } else {
+                let modalResponse = alert.runModal()
+                reponse(with: modalResponse)
+            }
         default:
             result(FlutterMethodNotImplemented)
         }
