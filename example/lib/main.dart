@@ -18,219 +18,166 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(title: const Text('Flutter Platform Alert')),
-            body: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await FlutterPlatformAlert.playAlertSound();
-                            },
-                            child: const Text('Play Alert Sound (Default)')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await FlutterPlatformAlert.playAlertSound(
-                                iconStyle: IconStyle.exclamation,
-                              );
-                            },
-                            child:
-                                const Text('Play Alert Sound (exclamation)')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await FlutterPlatformAlert.playAlertSound(
-                                iconStyle: IconStyle.error,
-                              );
-                            },
-                            child: const Text('Play Alert Sound (error)')),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                windowTitle: '白日依山盡 黃河入海流',
-                                text: '芋頭西米露 保力達蠻牛',
-                                iconStyle: IconStyle.exclamation,
-                                alertStyle: AlertButtonStyle.abortRetryIgnore,
-                                options: FlutterPlatformAlertOption(
-                                  runAsSheetOnMac: true,
-                                  preferMessageBoxOnWindows: true,
-                                ),
-                              );
-                              print(result);
-                            },
-                            child: const Text('Show non-ascii characters')),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                windowTitle: 'This ia title',
-                                text: 'This is body',
-                                iconStyle: IconStyle.information,
-                              );
-                              print(result);
-                            },
-                            child: const Text('Show information style')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                windowTitle: 'This ia title',
-                                text: 'This is body',
-                                iconStyle: IconStyle.warning,
-                              );
-                              print(result);
-                            },
-                            child: const Text('Show warning style')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                windowTitle: 'This ia title',
-                                text: 'This is body',
-                                iconStyle: IconStyle.error,
-                              );
-                              print(result);
-                            },
-                            child: const Text('Show error style')),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body');
-                              print(result);
-                            },
-                            child: const Text('Show OK')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle: AlertButtonStyle.okCancel);
-                              print(result);
-                            },
-                            child: const Text('Show OK Cancel')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle:
-                                          AlertButtonStyle.abortRetryIgnore);
-                              print(result);
-                            },
-                            child: const Text('Show Abort Retry Ignore')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle:
-                                          AlertButtonStyle.cancelTryContinue);
-                              print(result);
-                            },
-                            child: const Text('Show Cancel Try Continue')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle: AlertButtonStyle.retryCancel);
-                              print(result);
-                            },
-                            child: const Text('Show Retry Cancel')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle: AlertButtonStyle.yesNo);
-                              print(result);
-                            },
-                            child: const Text('Show Yes No')),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showAlert(
-                                      windowTitle: 'This ia title',
-                                      text: 'This is body',
-                                      alertStyle: AlertButtonStyle.yesNoCancel);
-                              print(result);
-                            },
-                            child: const Text('Show Yes No Cancel')),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final result =
-                                  await FlutterPlatformAlert.showCustomAlert(
-                                windowTitle: 'This ia title',
-                                text: 'This is body',
-                                positiveButtonTitle: "Positive",
-                                negativeButtonTitle: "Negative",
-                                neutralButtonTitle: "Neutral",
-                                options: FlutterPlatformAlertOption(
-                                    additionalWindowTitleOnWindows:
-                                        'Window title',
-                                    showAsLinksOnWindows: true),
-                              );
-                              print(result);
-                            },
-                            child: const Text('Show Yes No Cancel')),
-                      ),
-                    ]),
+            body: ListView(children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Play Alert Sounds',
+                    style: Theme.of(context).textTheme.headline6),
               ),
-            )));
+              ListTile(
+                  onTap: () async {
+                    await FlutterPlatformAlert.playAlertSound();
+                  },
+                  title: const Text('Play Alert Sound (Default)')),
+              ListTile(
+                  onTap: () async {
+                    await FlutterPlatformAlert.playAlertSound(
+                      iconStyle: IconStyle.exclamation,
+                    );
+                  },
+                  title: const Text('Play Alert Sound (exclamation)')),
+              ListTile(
+                  onTap: () async {
+                    await FlutterPlatformAlert.playAlertSound(
+                      iconStyle: IconStyle.error,
+                    );
+                  },
+                  title: const Text('Play Alert Sound (error)')),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Text('Standard Alert with Styles',
+                    style: Theme.of(context).textTheme.headline6),
+              ),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                      windowTitle: '白日依山盡 黃河入海流',
+                      text: '芋頭西米露 保力達蠻牛',
+                      iconStyle: IconStyle.exclamation,
+                      alertStyle: AlertButtonStyle.abortRetryIgnore,
+                      options: FlutterPlatformAlertOption(
+                        runAsSheetOnMac: true,
+                        preferMessageBoxOnWindows: true,
+                      ),
+                    );
+                    print(result);
+                  },
+                  title: const Text('Show non-ascii characters')),
+              const Divider(),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      iconStyle: IconStyle.warning,
+                    );
+                    print(result);
+                  },
+                  title: const Text('Show warning style')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      iconStyle: IconStyle.information,
+                    );
+                    print(result);
+                  },
+                  title: const Text('Show information style')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      iconStyle: IconStyle.error,
+                    );
+                    print(result);
+                  },
+                  title: const Text('Show error style')),
+              const Divider(),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title', text: 'This is body');
+                    print(result);
+                  },
+                  title: const Text('Show OK')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.okCancel);
+                    print(result);
+                  },
+                  title: const Text('Show OK/Cancel')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.abortRetryIgnore);
+                    print(result);
+                  },
+                  title: const Text('Show Abort/Retry/Ignore')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.cancelTryContinue);
+                    print(result);
+                  },
+                  title: const Text('Show Cancel/Try/Continue')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.retryCancel);
+                    print(result);
+                  },
+                  title: const Text('Show Retry/Cancel')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.yesNo);
+                    print(result);
+                  },
+                  title: const Text('Show Yes/No')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This ia title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.yesNoCancel);
+                    print(result);
+                  },
+                  title: const Text('Show Yes/No/Cancel')),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Custom Alerts',
+                    style: Theme.of(context).textTheme.headline6),
+              ),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showCustomAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      positiveButtonTitle: "Positive",
+                      negativeButtonTitle: "Negative",
+                      neutralButtonTitle: "Neutral",
+                      options: FlutterPlatformAlertOption(
+                          additionalWindowTitleOnWindows: 'Window title',
+                          showAsLinksOnWindows: true),
+                    );
+                    print(result);
+                  },
+                  title: const Text('Show Positive/Negative/Neutral')),
+            ])));
   }
 }

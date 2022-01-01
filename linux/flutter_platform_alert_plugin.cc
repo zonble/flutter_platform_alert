@@ -52,7 +52,7 @@ static const int PLUGIN_NEGATIVE = -201;
 static const int PLUGIN_NEUTRAL = -202;
 
 static GtkMessageType
-messageTypeFromString(const char* string)
+message_type_from_string(const char* string)
 {
     GtkMessageType messageType = GTK_MESSAGE_OTHER;
 
@@ -90,7 +90,7 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
     g_autofree gchar* alert_style = get_string_value(args, "alertStyle", &error);
     g_autofree gchar* icon_style = get_string_value(args, "iconStyle", &error);
 
-    GtkMessageType messageType = messageTypeFromString(icon_style);
+    GtkMessageType messageType = message_type_from_string(icon_style);
 
     GtkDialogFlags flags = (GtkDialogFlags)(GTK_DIALOG_DESTROY_WITH_PARENT);
     GtkWidget* dialog = gtk_message_dialog_new((GtkWindow*)self->widget,
@@ -99,6 +99,7 @@ show_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
         GTK_BUTTONS_NONE,
         window_title,
         NULL);
+
     gtk_message_dialog_format_secondary_text(
         GTK_MESSAGE_DIALOG(dialog), text, NULL);
 
@@ -218,7 +219,7 @@ show_custom_alert(FlutterPlatformAlertPlugin* self, FlMethodCall* method_call)
     g_autofree gchar* negative_button = get_string_value(args, "negativeButtonTitle", &error);
     g_autofree gchar* neutral_button = get_string_value(args, "neutralButtonTitle", &error);
 
-    GtkMessageType messageType = messageTypeFromString(icon_style);
+    GtkMessageType messageType = message_type_from_string(icon_style);
 
     GtkDialogFlags flags = (GtkDialogFlags)(GTK_DIALOG_DESTROY_WITH_PARENT);
     GtkWidget* dialog = gtk_message_dialog_new((GtkWindow*)self->widget,
