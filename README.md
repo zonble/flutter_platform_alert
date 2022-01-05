@@ -174,6 +174,14 @@ Windows 10 with MessageBox API
 
 ![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows.png)
 
+Windows 11 with TaskDialogIndirect API
+
+![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows_11.png)
+
+Windows 11 with TaskDialogIndirect API that shows buttons as links
+
+![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows_11_links.png)
+
 Ubuntu 21.10
 
 ![linux](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_linux.png)

@@ -173,11 +173,27 @@ class _MyAppState extends State<MyApp> {
                       neutralButtonTitle: "Neutral",
                       options: FlutterPlatformAlertOption(
                           additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
+                          showAsLinksOnWindows: false),
                     );
                     print(result);
                   },
                   title: const Text('Show Positive/Negative/Neutral')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showCustomAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      positiveButtonTitle: "Positive",
+                      negativeButtonTitle: "Negative",
+                      neutralButtonTitle: "Neutral",
+                      options: FlutterPlatformAlertOption(
+                          additionalWindowTitleOnWindows: 'Window title',
+                          showAsLinksOnWindows: true),
+                    );
+                    print(result);
+                  },
+                  title: const Text(
+                      'Show Positive/Negative/Neutral (as links on windows)')),
             ])));
   }
 }
