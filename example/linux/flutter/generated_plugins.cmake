@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_platform_alert
+  tray_manager
+  window_manager
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
