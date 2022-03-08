@@ -39,18 +39,11 @@ class FlutterPlatformAlertOption {
   /// The option only works on Windows.
   String? additionalWindowTitleOnWindows;
 
-  /// Represents if the alert dialog should be attached on a window instead of
-  /// showing a modal window.
-  ///
-  /// The option only works on Windows.
-  bool runAsSheetOnMac = false;
-
   /// Creates a new instance.
   FlutterPlatformAlertOption({
     this.preferMessageBoxOnWindows = false,
     this.showAsLinksOnWindows = false,
     this.additionalWindowTitleOnWindows,
-    this.runAsSheetOnMac = false,
   });
 }
 
@@ -98,7 +91,6 @@ class FlutterPlatformAlert {
       'iconStyle': iconStyleString,
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
-      'runAsSheet': options?.runAsSheetOnMac ?? false,
       'position': _positionToInt(windowPosition),
     });
     return stringToAlertButton(result);
@@ -131,7 +123,6 @@ class FlutterPlatformAlert {
       'neutralButtonTitle': neutralButtonTitle ?? '',
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
-      'runAsSheet': options?.runAsSheetOnMac ?? false,
       'position': _positionToInt(windowPosition),
     });
     return stringToCustomButton(result);

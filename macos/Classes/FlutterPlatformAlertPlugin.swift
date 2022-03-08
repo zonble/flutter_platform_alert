@@ -171,7 +171,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let alertStyle = FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
             let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
-            let runAsSheet = args["runAsSheet"] as? Bool ?? false
+            let runAsSheet = (args["position"] as? Int ?? 0) == 0
 
             let alert = NSAlert()
             alert.messageText = windowTitle
@@ -185,7 +185,10 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             
             NSApp.activate(ignoringOtherApps: true)
             let window = self.registrar.view?.window
-            if runAsSheet, let window = window {
+            if runAsSheet,
+               let window = window,
+               window.isVisible,
+               !window.isMiniaturized {
                 alert.beginSheetModal(for: window) { response in
                     let alertButton = alertStyle.handle(response: response)
                     result(alertButton.rawValue)
@@ -205,7 +208,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let text = args["text"] as? String ?? ""
             let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
-            let runAsSheet = args["runAsSheet"] as? Bool ?? false
+            let runAsSheet = (args["position"] as? Int ?? 0) == 0
 
             let alert = NSAlert()
             alert.messageText = windowTitle
@@ -254,7 +257,10 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
 
             NSApp.activate(ignoringOtherApps: true)
             let window = self.registrar.view?.window
-            if runAsSheet, let window = window {
+            if runAsSheet,
+               let window = window,
+               window.isVisible,
+               !window.isMiniaturized {
                 alert.beginSheetModal(for: window) { modalResponse in
                     reponse(with: modalResponse)
                 }

@@ -110,7 +110,6 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                       iconStyle: IconStyle.exclamation,
                       alertStyle: AlertButtonStyle.abortRetryIgnore,
                       options: FlutterPlatformAlertOption(
-                        runAsSheetOnMac: true,
                         preferMessageBoxOnWindows: true,
                       ),
                     );
