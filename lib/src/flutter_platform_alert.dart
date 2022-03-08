@@ -4,6 +4,14 @@ import 'package:flutter_platform_alert/src/icon_style.dart';
 import 'alert_button.dart';
 import 'alert_style.dart';
 import 'icon_style.dart';
+import 'window_position.dart';
+
+int _positionToInt(AlertWindowPosition position) {
+  if (position == AlertWindowPosition.screenCenter) {
+    return 1;
+  }
+  return 0;
+}
 
 /// AAdditional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
@@ -79,6 +87,7 @@ class FlutterPlatformAlert {
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
     FlutterPlatformAlertOption? options,
+    AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
   }) async {
     final alertStyleString = alertStyleToString(alertStyle);
     final iconStyleString = iconStyleToString(iconStyle);
@@ -90,6 +99,7 @@ class FlutterPlatformAlert {
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'runAsSheet': options?.runAsSheetOnMac ?? false,
+      'position': _positionToInt(windowPosition),
     });
     return stringToAlertButton(result);
   }
@@ -109,6 +119,7 @@ class FlutterPlatformAlert {
     String? negativeButtonTitle = '',
     String? neutralButtonTitle = '',
     FlutterPlatformAlertOption? options,
+    AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
   }) async {
     final iconStyleString = iconStyleToString(iconStyle);
     final result = await _channel.invokeMethod('showCustomAlert', {
@@ -121,6 +132,7 @@ class FlutterPlatformAlert {
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
       'runAsSheet': options?.runAsSheetOnMac ?? false,
+      'position': _positionToInt(windowPosition),
     });
     return stringToCustomButton(result);
   }

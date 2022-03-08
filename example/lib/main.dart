@@ -266,6 +266,8 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
             windowTitle: 'This ia title', text: 'This is body');
         print(result);
         break;
+      default:
+        break;
     }
   }
 

@@ -1,0 +1,4 @@
+enum AlertWindowPosition {
+  parentWindowCenter,
+  screenCenter,
+}

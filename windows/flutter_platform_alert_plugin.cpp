@@ -48,31 +48,33 @@ Utf16FromUtf8(const std::string& utf8_string)
     return utf16_string;
 }
 
-std::string
-GetStringArgument(const flutter::MethodCall<>& method_call, const char* name)
+template <typename T>
+T GetValue(const flutter::MethodCall<>& method_call, const char* name)
 {
-    std::string argument;
+    T argument {};
     const auto* arguments = std::get_if<EncodableMap>(method_call.arguments());
     if (arguments) {
         auto it = arguments->find(EncodableValue(name));
         if (it != arguments->end()) {
-            argument = std::get<std::string>(it->second);
+            argument = std::get<T>(it->second);
         }
     }
     return argument;
 }
 
-bool GetBoolArgument(const flutter::MethodCall<>& method_call, const char* name)
+std::string GetString(const flutter::MethodCall<>& method_call, const char* name)
 {
-    bool argument = false;
-    const auto* arguments = std::get_if<EncodableMap>(method_call.arguments());
-    if (arguments) {
-        auto url_it = arguments->find(EncodableValue(name));
-        if (url_it != arguments->end()) {
-            argument = std::get<bool>(url_it->second);
-        }
-    }
-    return argument;
+    return GetValue<std::string>(method_call, name);
+}
+
+bool GetBool(const flutter::MethodCall<>& method_call, const char* name)
+{
+    return GetValue<bool>(method_call, name);
+}
+
+bool GetInt(const flutter::MethodCall<>& method_call, const char* name)
+{
+    return GetValue<int>(method_call, name);
 }
 
 class FlutterPlatformAlertPlugin : public flutter::Plugin {
@@ -93,14 +95,16 @@ private:
     std::string ShowWithMessageBox(std::wstring windowTitleUtf16,
         std::wstring textUtf16,
         std::string alertStyleString,
-        std::string iconStyleString);
+        std::string iconStyleString,
+        int windowPosition);
 
     // Shows an alert using TaskDialogIndirect API.
     std::string ShowWithTaskDialogIndirect(std::wstring windowTitleUtf16,
         std::wstring textUtf16,
         std::string alertStyleString,
         std::string iconStyleString,
-        std::wstring additionalWindowTitle);
+        std::wstring additionalWindowTitle,
+        int windowPosition);
 
     std::string StringFromMessageBoxID(int msgboxid);
     int IconTypeFromString(std::string string);
@@ -113,7 +117,8 @@ private:
         std::wstring negativeButton,
         std::wstring neutralButton,
         std::wstring additionalWindowTitle,
-        bool showAsLinks);
+        bool showAsLinks,
+        int windowPosition, );
 
     // A reference of the registrar in order to access the root window.
     flutter::PluginRegistrarWindows* registrar_;
@@ -208,7 +213,8 @@ std::string
 FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
     std::wstring textUtf16,
     std::string alertStyleString,
-    std::string iconStyleString)
+    std::string iconStyleString,
+    int windowPosition)
 {
     UINT alertType = MB_OK;
     if (alertStyleString == "abortRetryIgnore") {
@@ -229,6 +235,13 @@ FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
 
     UINT iconStyle = IconTypeFromString(iconStyleString);
     auto hwnd = registrar_->GetView()->GetNativeWindow();
+    WINDOWPLACEMENT placement;
+    GetWindowPlacement(hwnd, &placement);
+    bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
+
+    if (windowIsHidden || windowPosition == 1) {
+        hwnd = NULL;
+    }
 
     int msgboxid = MessageBox(hwnd,
         (LPCWSTR)textUtf16.c_str(),
@@ -244,7 +257,8 @@ FlutterPlatformAlertPlugin::ShowWithTaskDialogIndirect(
     std::wstring text,
     std::string alertStyle,
     std::string iconStyle,
-    std::wstring additionalWindowTitle)
+    std::wstring additionalWindowTitle,
+    int windowPosition)
 {
 
     TASKDIALOGCONFIG config = { 0 };
@@ -294,6 +308,14 @@ FlutterPlatformAlertPlugin::ShowWithTaskDialogIndirect(
     }
 
     auto hwnd = registrar_->GetView()->GetNativeWindow();
+    WINDOWPLACEMENT placement;
+    GetWindowPlacement(hwnd, &placement);
+    bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
+
+    if (windowIsHidden || windowPosition == 1) {
+        hwnd = NULL;
+    }
+
     config.hwndParent = hwnd;
 
     int nButtonPressed = 0;
@@ -310,7 +332,8 @@ FlutterPlatformAlertPlugin::ShowWithCustomButtons(
     std::wstring negativeButton,
     std::wstring neutralButton,
     std::wstring additionalWindowTitle,
-    bool showAsLinks)
+    bool showAsLinks,
+    int windowPosition)
 {
     TASKDIALOGCONFIG config = { 0 };
     config.cbSize = sizeof(config);
@@ -357,6 +380,14 @@ FlutterPlatformAlertPlugin::ShowWithCustomButtons(
     }
 
     auto hwnd = registrar_->GetView()->GetNativeWindow();
+
+    WINDOWPLACEMENT placement;
+    GetWindowPlacement(hwnd, &placement);
+    bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
+
+    if (windowIsHidden || windowPosition == 1) {
+        hwnd = NULL;
+    }
     config.hwndParent = hwnd;
 
     int nButtonPressed = 0;
@@ -369,17 +400,17 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result)
 {
     if (method_call.method_name().compare("playAlertSound") == 0) {
-        std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
+        std::string iconStyleString = GetString(method_call, "iconStyle");
         UINT iconStyle = IconTypeFromString(iconStyleString);
         MessageBeep(iconStyle);
         result->Success();
     } else if (method_call.method_name().compare("showAlert") == 0) {
-        std::string windowTitle = GetStringArgument(method_call, "windowTitle");
-        std::string text = GetStringArgument(method_call, "text");
-        std::string alertStyleString = GetStringArgument(method_call, "alertStyle");
-        std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
-        bool preferMessageBox = GetBoolArgument(method_call, "preferMessageBox");
-        std::string additionalWindowTitle = GetStringArgument(method_call, "additionalWindowTitle");
+        std::string windowTitle = GetString(method_call, "windowTitle");
+        std::string text = GetString(method_call, "text");
+        std::string alertStyleString = GetString(method_call, "alertStyle");
+        std::string iconStyleString = GetString(method_call, "iconStyle");
+        bool preferMessageBox = GetBool(method_call, "preferMessageBox");
+        std::string additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
 
         std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
         std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
@@ -387,27 +418,29 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
 
         std::string response;
 
+        int windowPosition = GetInt(method_call, "position");
+
         if (preferMessageBox) {
             response = ShowWithMessageBox(
-                windowTitleUtf16, textUtf16, alertStyleString, iconStyleString);
+                windowTitleUtf16, textUtf16, alertStyleString, iconStyleString, windowPosition);
         } else {
             response = ShowWithTaskDialogIndirect(windowTitleUtf16,
                 textUtf16,
                 alertStyleString,
                 iconStyleString,
-                additionalWindowTitleUtf16);
+                additionalWindowTitleUtf16, windowPosition);
         }
         result->Success(EncodableValue(response.c_str()));
 
     } else if (method_call.method_name().compare("showCustomAlert") == 0) {
-        std::string windowTitle = GetStringArgument(method_call, "windowTitle");
-        std::string text = GetStringArgument(method_call, "text");
-        std::string iconStyleString = GetStringArgument(method_call, "iconStyle");
-        std::string positiveButton = GetStringArgument(method_call, "positiveButtonTitle");
-        std::string negativeButton = GetStringArgument(method_call, "negativeButtonTitle");
-        std::string neutralButton = GetStringArgument(method_call, "neutralButtonTitle");
-        std::string additionalWindowTitle = GetStringArgument(method_call, "additionalWindowTitle");
-        bool showAsLinksOnWindows = GetBoolArgument(method_call, "showAsLinksOnWindows");
+        std::string windowTitle = GetString(method_call, "windowTitle");
+        std::string text = GetString(method_call, "text");
+        std::string iconStyleString = GetString(method_call, "iconStyle");
+        std::string positiveButton = GetString(method_call, "positiveButtonTitle");
+        std::string negativeButton = GetString(method_call, "negativeButtonTitle");
+        std::string neutralButton = GetString(method_call, "neutralButtonTitle");
+        std::string additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
+        bool showAsLinksOnWindows = GetBool(method_call, "showAsLinksOnWindows");
 
         std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
         std::wstring textUtf16 = Utf16FromUtf8(text.c_str());

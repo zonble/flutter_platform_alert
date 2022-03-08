@@ -23,3 +23,4 @@ export 'src/alert_button.dart';
 export 'src/alert_style.dart';
 export 'src/icon_style.dart';
 export 'src/flutter_platform_alert.dart';
+export 'src/window_position.dart';
