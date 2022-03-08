@@ -143,8 +143,15 @@ fileprivate enum FlutterPlatformIconStyle: String {
 public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_platform_alert", binaryMessenger: registrar.messenger)
-        let instance = FlutterPlatformAlertPlugin()
+        let instance = FlutterPlatformAlertPlugin(registrar)
         registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    private var registrar: FlutterPluginRegistrar!;
+    
+    public init(_ registrar: FlutterPluginRegistrar) {
+        super.init()
+        self.registrar = registrar
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -175,7 +182,9 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 alert.addButton(withTitle: button)
             }
             alert.alertStyle = iconStyle.alertStyle
-            let window = NSApp.mainWindow
+            
+            NSApp.activate(ignoringOtherApps: true)
+            let window = self.registrar.view?.window
             if runAsSheet, let window = window {
                 alert.beginSheetModal(for: window) { response in
                     let alertButton = alertStyle.handle(response: response)
@@ -243,7 +252,8 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 }
             }
 
-            let window = NSApp.mainWindow
+            NSApp.activate(ignoringOtherApps: true)
+            let window = self.registrar.view?.window
             if runAsSheet, let window = window {
                 alert.beginSheetModal(for: window) { modalResponse in
                     reponse(with: modalResponse)
