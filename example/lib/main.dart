@@ -1,9 +1,18 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,7 +21,51 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
+  @override
+  void initState() {
+    trayManager.addListener(this);
+    windowManager.addListener(this);
+    _init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    trayManager.removeListener(this);
+    windowManager.removeListener(this);
+    super.dispose();
+  }
+
+  void _init() async {
+    await trayManager.setIcon(
+      Platform.isWindows
+          ? 'images/tray_icon_original.ico'
+          : 'images/tray_icon_original.png',
+    );
+    List<MenuItem> items = [
+      MenuItem(
+        key: 'show_window',
+        title: 'Show Window',
+      ),
+      MenuItem(
+        key: 'hide_window',
+        title: 'Hide Window',
+      ),
+      MenuItem(
+        key: 'show_alert_ok',
+        title: 'Show OK',
+      ),
+      MenuItem.separator,
+      MenuItem(
+        key: 'exit_app',
+        title: 'Exit App',
+      ),
+    ];
+    await trayManager.setContextMenu(items);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -195,5 +248,29 @@ class _MyAppState extends State<MyApp> {
                   title: const Text(
                       'Show Positive/Negative/Neutral (as links on windows)')),
             ])));
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) async {
+    switch (menuItem.key) {
+      case 'show_window':
+        await windowManager.show();
+        await windowManager.setSkipTaskbar(false);
+        break;
+      case 'hide_window':
+        await windowManager.hide();
+        await windowManager.setSkipTaskbar(true);
+        break;
+      case 'show_alert_ok':
+        final result = await FlutterPlatformAlert.showAlert(
+            windowTitle: 'This ia title', text: 'This is body');
+        print(result);
+        break;
+    }
+  }
+
+  @override
+  void onTrayIconMouseDown() {
+    trayManager.popUpContextMenu();
   }
 }
