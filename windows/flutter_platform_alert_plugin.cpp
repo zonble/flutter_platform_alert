@@ -118,7 +118,7 @@ private:
         std::wstring neutralButton,
         std::wstring additionalWindowTitle,
         bool showAsLinks,
-        int windowPosition, );
+        int windowPosition);
 
     // A reference of the registrar in order to access the root window.
     flutter::PluginRegistrarWindows* registrar_;
@@ -441,6 +441,7 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
         std::string neutralButton = GetString(method_call, "neutralButtonTitle");
         std::string additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
         bool showAsLinksOnWindows = GetBool(method_call, "showAsLinksOnWindows");
+        int windowPosition = GetInt(method_call, "position");
 
         std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
         std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
@@ -456,7 +457,8 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
             negativeButtonUtf16,
             neutralButtonUtf16,
             additionalWindowTitleUtf16,
-            showAsLinksOnWindows);
+            showAsLinksOnWindows,
+            windowPosition);
         result->Success(EncodableValue(response.c_str()));
 
     } else {
