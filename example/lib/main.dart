@@ -223,6 +223,9 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                       positiveButtonTitle: "Positive",
                       negativeButtonTitle: "Negative",
                       neutralButtonTitle: "Neutral",
+                      iconPath: Platform.isWindows
+                          ? 'images/tray_icon_original.ico'
+                          : 'images/tray_icon_original.png',
                       options: FlutterPlatformAlertOption(
                           additionalWindowTitleOnWindows: 'Window title',
                           showAsLinksOnWindows: false),

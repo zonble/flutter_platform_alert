@@ -1,10 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_alert/src/icon_style.dart';
+import 'icon_style.dart';
 
 import 'alert_button.dart';
 import 'alert_style.dart';
-import 'icon_style.dart';
 import 'window_position.dart';
+import 'package:path/path.dart' as path;
 
 int _positionToInt(AlertWindowPosition position) {
   if (position == AlertWindowPosition.screenCenter) {
@@ -26,10 +29,10 @@ class FlutterPlatformAlertOption {
   /// API and looks much better than MessageBox.
   bool preferMessageBoxOnWindows = false;
 
-  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on Windows
-  /// while calling TaskDialogIndirect API. The option is only available when
-  /// calling [FlutterPlatformAlert.showCustomAlert] but it does not work on
-  /// [FlutterPlatformAlert.showAlert].
+  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on
+  /// Windows while calling TaskDialogIndirect API. The option is only available
+  /// when calling [FlutterPlatformAlert.showCustomAlert] but it does not work
+  /// on [FlutterPlatformAlert.showAlert].
   ///
   /// The option only works on Windows.
   bool showAsLinksOnWindows = false;
@@ -54,9 +57,9 @@ class FlutterPlatformAlert {
   /// Plays the system alert sound.
   ///
   /// Setting [iconStyle] could decide which sound, such as sounds for warnings,
-  /// errors and so on,  woul be played on Windows.
+  /// errors and so on, would be played on Windows.
   ///
-  /// It makes an iPhone to virbate on iOS.
+  /// It makes an iPhone to vibrate on iOS.
   static Future<void> playAlertSound(
       {IconStyle iconStyle = IconStyle.none}) async {
     final iconStyleString = iconStyleToString(iconStyle);
@@ -103,6 +106,9 @@ class FlutterPlatformAlert {
   /// button like for "OK" or "Yes",  [negativeButtonTitle] is the title for the
   /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
   /// other buttons.
+  ///
+  /// You can also specify an icon by assigning the [iconPath] parameter. Please
+  /// note that we only support ICO files on Windows.
   static Future<CustomButton> showCustomAlert({
     required String windowTitle,
     required String text,
@@ -112,8 +118,28 @@ class FlutterPlatformAlert {
     String? neutralButtonTitle = '',
     FlutterPlatformAlertOption? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
+    String? iconPath = '',
   }) async {
     final iconStyleString = iconStyleToString(iconStyle);
+
+    final base64Icon = await () async {
+      if (iconPath == null) return '';
+      if (iconPath.isEmpty) return '';
+
+      final imageData = await rootBundle.load(iconPath);
+      String base64Icon = base64Encode(imageData.buffer.asUint8List());
+      return base64Icon;
+    }();
+
+    var context = path.Context(style: path.Style.platform);
+    final exactIconPath = iconPath != null && iconPath.isNotEmpty
+        ? context.joinAll([
+            path.dirname(Platform.resolvedExecutable),
+            'data/flutter_assets',
+            iconPath,
+          ])
+        : '';
+
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
@@ -124,6 +150,8 @@ class FlutterPlatformAlert {
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
       'position': _positionToInt(windowPosition),
+      'iconPath': exactIconPath,
+      'base64Icon': base64Icon,
     });
     return stringToCustomButton(result);
   }

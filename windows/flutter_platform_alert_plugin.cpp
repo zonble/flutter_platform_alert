@@ -86,6 +86,7 @@ public:
     virtual ~FlutterPlatformAlertPlugin();
 
 private:
+    //HICON hIcon;
     // Called when a method is called on this plugin's channel from Dart.
     void HandleMethodCall(
         const flutter::MethodCall<flutter::EncodableValue>& method_call,
@@ -118,7 +119,8 @@ private:
         std::wstring neutralButton,
         std::wstring additionalWindowTitle,
         bool showAsLinks,
-        int windowPosition);
+        int windowPosition,
+        std::wstring iconPath);
 
     // A reference of the registrar in order to access the root window.
     flutter::PluginRegistrarWindows* registrar_;
@@ -235,7 +237,7 @@ FlutterPlatformAlertPlugin::ShowWithMessageBox(std::wstring windowTitleUtf16,
 
     UINT iconStyle = IconTypeFromString(iconStyleString);
     auto hwnd = registrar_->GetView()->GetNativeWindow();
-    WINDOWPLACEMENT placement;
+    WINDOWPLACEMENT placement = { 0 };
     GetWindowPlacement(hwnd, &placement);
     bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
 
@@ -308,7 +310,7 @@ FlutterPlatformAlertPlugin::ShowWithTaskDialogIndirect(
     }
 
     auto hwnd = registrar_->GetView()->GetNativeWindow();
-    WINDOWPLACEMENT placement;
+    WINDOWPLACEMENT placement = { 0 };
     GetWindowPlacement(hwnd, &placement);
     bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
 
@@ -333,7 +335,8 @@ FlutterPlatformAlertPlugin::ShowWithCustomButtons(
     std::wstring neutralButton,
     std::wstring additionalWindowTitle,
     bool showAsLinks,
-    int windowPosition)
+    int windowPosition,
+    std::wstring iconPath)
 {
     TASKDIALOGCONFIG config = { 0 };
     config.cbSize = sizeof(config);
@@ -371,7 +374,12 @@ FlutterPlatformAlertPlugin::ShowWithCustomButtons(
         config.dwCommonButtons = TDCBF_OK_BUTTON;
     }
 
-    if (iconStyleString == "error" || iconStyleString == "hand" || iconStyleString == "stop") {
+    if (!iconPath.empty()) {
+        config.dwFlags |= TDF_USE_HICON_MAIN;
+        HICON hIcon = (HICON)LoadImage(nullptr, (LPCWSTR)(iconPath.c_str()), IMAGE_ICON,
+            GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_LOADFROMFILE);
+        config.hMainIcon = hIcon;
+    } else if (iconStyleString == "error" || iconStyleString == "hand" || iconStyleString == "stop") {
         config.pszMainIcon = TD_ERROR_ICON;
     } else if (iconStyleString == "exclamation" || iconStyleString == "warning") {
         config.pszMainIcon = TD_WARNING_ICON;
@@ -381,7 +389,7 @@ FlutterPlatformAlertPlugin::ShowWithCustomButtons(
 
     auto hwnd = registrar_->GetView()->GetNativeWindow();
 
-    WINDOWPLACEMENT placement;
+    WINDOWPLACEMENT placement = { 0 };
     GetWindowPlacement(hwnd, &placement);
     bool windowIsHidden = placement.rcNormalPosition.top == 0 && placement.rcNormalPosition.bottom == 0 && placement.rcNormalPosition.left == 0 && placement.rcNormalPosition.right == 0;
 
@@ -405,16 +413,16 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
         MessageBeep(iconStyle);
         result->Success();
     } else if (method_call.method_name().compare("showAlert") == 0) {
-        std::string windowTitle = GetString(method_call, "windowTitle");
-        std::string text = GetString(method_call, "text");
-        std::string alertStyleString = GetString(method_call, "alertStyle");
-        std::string iconStyleString = GetString(method_call, "iconStyle");
+        auto windowTitle = GetString(method_call, "windowTitle");
+        auto text = GetString(method_call, "text");
+        auto alertStyleString = GetString(method_call, "alertStyle");
+        auto iconStyleString = GetString(method_call, "iconStyle");
         bool preferMessageBox = GetBool(method_call, "preferMessageBox");
         std::string additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
 
-        std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
-        std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
-        std::wstring additionalWindowTitleUtf16 = Utf16FromUtf8(additionalWindowTitle.c_str());
+        auto windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
+        auto textUtf16 = Utf16FromUtf8(text.c_str());
+        auto additionalWindowTitleUtf16 = Utf16FromUtf8(additionalWindowTitle.c_str());
 
         std::string response;
 
@@ -433,22 +441,24 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
         result->Success(EncodableValue(response.c_str()));
 
     } else if (method_call.method_name().compare("showCustomAlert") == 0) {
-        std::string windowTitle = GetString(method_call, "windowTitle");
-        std::string text = GetString(method_call, "text");
-        std::string iconStyleString = GetString(method_call, "iconStyle");
-        std::string positiveButton = GetString(method_call, "positiveButtonTitle");
-        std::string negativeButton = GetString(method_call, "negativeButtonTitle");
-        std::string neutralButton = GetString(method_call, "neutralButtonTitle");
-        std::string additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
+        auto windowTitle = GetString(method_call, "windowTitle");
+        auto text = GetString(method_call, "text");
+        auto iconStyleString = GetString(method_call, "iconStyle");
+        auto positiveButton = GetString(method_call, "positiveButtonTitle");
+        auto negativeButton = GetString(method_call, "negativeButtonTitle");
+        auto neutralButton = GetString(method_call, "neutralButtonTitle");
+        auto additionalWindowTitle = GetString(method_call, "additionalWindowTitle");
+        auto iconPath = GetString(method_call, "iconPath");
         bool showAsLinksOnWindows = GetBool(method_call, "showAsLinksOnWindows");
         int windowPosition = GetInt(method_call, "position");
 
-        std::wstring windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
-        std::wstring textUtf16 = Utf16FromUtf8(text.c_str());
-        std::wstring positiveButtonUtf16 = Utf16FromUtf8(positiveButton.c_str());
-        std::wstring negativeButtonUtf16 = Utf16FromUtf8(negativeButton.c_str());
-        std::wstring neutralButtonUtf16 = Utf16FromUtf8(neutralButton.c_str());
-        std::wstring additionalWindowTitleUtf16 = Utf16FromUtf8(additionalWindowTitle.c_str());
+        auto windowTitleUtf16 = Utf16FromUtf8(windowTitle.c_str());
+        auto textUtf16 = Utf16FromUtf8(text.c_str());
+        auto positiveButtonUtf16 = Utf16FromUtf8(positiveButton.c_str());
+        auto negativeButtonUtf16 = Utf16FromUtf8(negativeButton.c_str());
+        auto neutralButtonUtf16 = Utf16FromUtf8(neutralButton.c_str());
+        auto additionalWindowTitleUtf16 = Utf16FromUtf8(additionalWindowTitle.c_str());
+        auto iconPathUtf16 = Utf16FromUtf8(iconPath.c_str());
 
         std::string response = ShowWithCustomButtons(windowTitleUtf16,
             textUtf16,
@@ -458,9 +468,9 @@ void FlutterPlatformAlertPlugin::HandleMethodCall(
             neutralButtonUtf16,
             additionalWindowTitleUtf16,
             showAsLinksOnWindows,
-            windowPosition);
+            windowPosition,
+            iconPathUtf16);
         result->Success(EncodableValue(response.c_str()));
-
     } else {
         result->NotImplemented();
     }
