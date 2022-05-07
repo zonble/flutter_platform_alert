@@ -64,6 +64,8 @@ static const int PLUGIN_POSITIVE = -200;
 static const int PLUGIN_NEGATIVE = -201;
 static const int PLUGIN_NEUTRAL = -202;
 
+// Maps the GTK alert type to the alert type sent from Flutter. Actually the
+// alert type is from Windows.
 static GtkMessageType message_type_from_string(const char *string) {
   GtkMessageType messageType = GTK_MESSAGE_OTHER;
 
@@ -84,6 +86,7 @@ static GtkMessageType message_type_from_string(const char *string) {
   return messageType;
 }
 
+// Shows a standard alert.
 static FlMethodResponse *show_alert(FlutterPlatformAlertPlugin *self,
                                     FlMethodCall *method_call) {
   FlValue *args = fl_method_call_get_args(method_call);
@@ -212,6 +215,7 @@ static FlMethodResponse *show_alert(FlutterPlatformAlertPlugin *self,
   return FL_METHOD_RESPONSE(fl_method_success_response_new(value));
 }
 
+// Shows a custom alert.
 static FlMethodResponse *show_custom_alert(FlutterPlatformAlertPlugin *self,
                                            FlMethodCall *method_call) {
   FlValue *args = fl_method_call_get_args(method_call);
@@ -251,6 +255,19 @@ static FlMethodResponse *show_custom_alert(FlutterPlatformAlertPlugin *self,
       window, flags, messageType, GTK_BUTTONS_NONE, window_title, NULL);
   gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), text,
                                            NULL);
+
+  g_autofree gchar *icon_path = get_string_value(args, "iconPath", &error);
+
+  if (icon_path != nullptr) {
+    // gtk_message_dialog_set_image is already deprecated but let us just
+    // continue use it today.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    GtkWidget *image = gtk_image_new_from_file(icon_path);
+    gtk_widget_show(image);
+    gtk_message_dialog_set_image(GTK_MESSAGE_DIALOG(dialog), image);
+#pragma GCC diagnostic pop
+  }
 
   int button_count = 0;
   if (strlen(positive_button)) {
@@ -333,13 +350,11 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
 gboolean callback_func(GtkWidget *widget, GdkEventWindowState *event,
                        gpointer user_data) {
   FlutterPlatformAlertPlugin *plugin = (FlutterPlatformAlertPlugin *)user_data;
-  //   fprintf(stderr, "changed mask %d\n1", event->changed_mask);
-  if ((event->new_window_state & GDK_WINDOW_STATE_ICONIFIED) ||
-      (event->new_window_state & GDK_WINDOW_STATE_WITHDRAWN)) {
-    plugin->window_visible = false;
-  } else {
-    plugin->window_visible = true;
-  }
+
+  plugin->window_visible =
+      !((event->new_window_state & GDK_WINDOW_STATE_ICONIFIED) ||
+        (event->new_window_state & GDK_WINDOW_STATE_WITHDRAWN));
+
   return TRUE;
 }
 

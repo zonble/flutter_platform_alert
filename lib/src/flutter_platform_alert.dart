@@ -140,6 +140,8 @@ class FlutterPlatformAlert {
           ])
         : '';
 
+    print('exactIconPath $exactIconPath');
+
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
