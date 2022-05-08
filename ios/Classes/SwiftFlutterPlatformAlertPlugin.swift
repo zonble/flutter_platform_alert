@@ -14,7 +14,7 @@ fileprivate enum AlerButton: String {
     case yesButton = "yes"
 }
 
-fileprivate enum CustomAlerButton: String {
+fileprivate enum CustomAlertButton: String {
   case positiveButton = "positive_button"
   case negativeButton = "negative_button"
   case neutralButton = "neutral_button"
@@ -150,21 +150,21 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                positiveButton.isEmpty == false {
                 let buttonStyle = style(forButtonTitle: positiveButton)
                 actions.append(UIAlertAction(title: positiveButton, style: buttonStyle) { action in
-                    result(CustomAlerButton.positiveButton.rawValue)
+                    result(CustomAlertButton.positiveButton.rawValue)
                 })
             }
             if let neutralButton = args["neutralButtonTitle"] as? String,
                neutralButton.isEmpty == false {
                 let buttonStyle = style(forButtonTitle: neutralButton)
                 actions.append(UIAlertAction(title: neutralButton, style: buttonStyle) { action in
-                    result(CustomAlerButton.neutralButton.rawValue)
+                    result(CustomAlertButton.neutralButton.rawValue)
                 })
             }
             if let negativeButton = args["negativeButtonTitle"] as? String,
                negativeButton.isEmpty == false {
                 let buttonStyle = style(forButtonTitle: negativeButton)
                 actions.append(UIAlertAction(title: negativeButton, style: buttonStyle) { action in
-                    result(CustomAlerButton.negativeButton.rawValue)
+                    result(CustomAlertButton.negativeButton.rawValue)
                 })
             }
             let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: actions.count > 2 ? .actionSheet : .alert)

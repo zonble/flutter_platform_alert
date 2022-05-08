@@ -9,7 +9,9 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    await windowManager.ensureInitialized();
+  }
 
   runApp(const MyApp());
 }
@@ -24,9 +26,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
   @override
   void initState() {
-    trayManager.addListener(this);
-    windowManager.addListener(this);
-    _init();
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      // These are not supported on iOS and Android.
+      trayManager.addListener(this);
+      windowManager.addListener(this);
+      _init();
+    }
     super.initState();
   }
 

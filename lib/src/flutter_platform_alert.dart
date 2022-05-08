@@ -9,12 +9,8 @@ import 'alert_style.dart';
 import 'window_position.dart';
 import 'package:path/path.dart' as path;
 
-int _positionToInt(AlertWindowPosition position) {
-  if (position == AlertWindowPosition.screenCenter) {
-    return 1;
-  }
-  return 0;
-}
+int _positionToInt(AlertWindowPosition position) =>
+    position == AlertWindowPosition.screenCenter ? 1 : 0;
 
 /// Additional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
@@ -62,7 +58,7 @@ class FlutterPlatformAlert {
   /// It makes an iPhone to vibrate on iOS.
   static Future<void> playAlertSound(
       {IconStyle iconStyle = IconStyle.none}) async {
-    final iconStyleString = iconStyleToString(iconStyle);
+    final iconStyleString = iconStyle.stringValue;
     await _channel.invokeMethod('playAlertSound', {
       'iconStyle': iconStyleString,
     });
@@ -85,8 +81,8 @@ class FlutterPlatformAlert {
     FlutterPlatformAlertOption? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
   }) async {
-    final alertStyleString = alertStyleToString(alertStyle);
-    final iconStyleString = iconStyleToString(iconStyle);
+    final alertStyleString = alertStyle.stringValue;
+    final iconStyleString = iconStyle.stringValue;
     final result = await _channel.invokeMethod('showAlert', {
       'windowTitle': windowTitle,
       'text': text,
@@ -96,7 +92,7 @@ class FlutterPlatformAlert {
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'position': _positionToInt(windowPosition),
     });
-    return stringToAlertButton(result);
+    return AlertButtonHelper.fromString(result);
   }
 
   /// Shows a platform alert dialog with custom button titles.
@@ -131,7 +127,7 @@ class FlutterPlatformAlert {
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
     String? iconPath = '',
   }) async {
-    final iconStyleString = iconStyleToString(iconStyle);
+    final iconStyleString = iconStyle.stringValue;
 
     final base64Icon = await () async {
       if (iconPath == null) return '';
@@ -164,6 +160,6 @@ class FlutterPlatformAlert {
       'iconPath': exactIconPath,
       'base64Icon': base64Icon,
     });
-    return stringToCustomButton(result);
+    return CustomButtonHelper.fromString(result);
   }
 }
