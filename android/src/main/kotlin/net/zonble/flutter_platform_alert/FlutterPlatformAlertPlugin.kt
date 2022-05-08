@@ -3,11 +3,15 @@ package net.zonble.flutter_platform_alert
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Base64
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -15,7 +19,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import java.util.*
 
 class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private var activity: Activity? = null
@@ -83,6 +86,8 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "")
           val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
           val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
+          val base64Icon = args.getOrDefault("base64Icon", "")
+
           val builder = AlertDialog.Builder(
             this.activity,
             R.style.AlertDialogCustom
@@ -104,6 +109,14 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             builder.setPositiveButton("OK") { _, _ -> result.success("other") }
             buttonCount += 1
           }
+
+          if (base64Icon.isNotEmpty()) {
+            val decodedString = Base64.decode(base64Icon,Base64.DEFAULT)
+            val decodedByte: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+            val icon: Drawable = BitmapDrawable(activity?.resources, decodedByte)
+            builder.setIcon(icon)
+          }
+
           builder.create().show()
         }
       }
