@@ -30,7 +30,7 @@ jobs:
       with:	
         path: flutter
         repository: flutter/flutter	
-        ref: master	
+        ref: stable	
         # Shallow clones don't work; see https://github.com/flutter/flutter/issues/18532
         fetch-depth: 0
     - name: Add Flutter tags
