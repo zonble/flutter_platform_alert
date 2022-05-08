@@ -1,3 +1,7 @@
+## 0.2.6
+
+- Allows adding icons to the native alert dialogs.
+
 ## 0.2.2
 
 - Allows users to place the alert window to the center of the parent window or
