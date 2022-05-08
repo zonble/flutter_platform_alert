@@ -99,14 +99,14 @@ class FlutterPlatformAlert {
   ///
   /// You can assign up to 3 buttons in the alert dialog. The method follows the
   /// convention on Android. [positiveButtonTitle] is the title of the positive
-  /// button like for "OK" or "Yes",  [negativeButtonTitle] is the title for the
+  /// button like for "OK" or "Yes", [negativeButtonTitle] is the title for the
   /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
   /// other buttons.
   ///
   /// You can also specify an icon by assigning the [iconPath] parameter. The
-  /// parameter works on Windows, macOS and Linux. The path should be as the
-  /// path of an asset in your Flutter app, for example, if you can create an
-  /// image widget as
+  /// parameter works on Android, Windows, macOS and Linux. The path should be
+  /// as the path of an asset in your Flutter app, for example, if you can
+  /// create an image widget as
   ///
   /// ``` dart
   /// Image.asset('images/tray_icon_original.png');
