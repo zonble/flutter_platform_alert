@@ -13,7 +13,7 @@ fileprivate enum AlerButton: String {
   case yesButton = "yes"
 }
 
-fileprivate enum CustomAlerButton: String {
+fileprivate enum CustomAlertButton: String {
   case positiveButton = "positive_button"
   case negativeButton = "negative_button"
   case neutralButton = "neutral_button"
@@ -209,14 +209,21 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let iconStyleString = args["iconStyle"] as? String ?? ""
             let iconStyle = FlutterPlatformIconStyle(rawValue: iconStyleString) ?? FlutterPlatformIconStyle.none
             let runAsSheet = (args["position"] as? Int ?? 0) == 0
+            let base64Icon = args["base64Icon"] as? String
 
             let alert = NSAlert()
             alert.messageText = windowTitle
             alert.informativeText = text
             alert.alertStyle = iconStyle.alertStyle
 
+            if let base64Icon = base64Icon,
+               let data = Data(base64Encoded: base64Icon),
+               let image = NSImage(data: data) {
+                alert.icon = image
+            }
+
             var index = 0
-            var buttons = [CustomAlerButton]()
+            var buttons = [CustomAlertButton]()
 
             if let positiveButton = args["positiveButtonTitle"] as? String,
                positiveButton.isEmpty == false {
@@ -241,7 +248,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 alert.addButton(withTitle: NSLocalizedString("OK", comment: ""))
             }
 
-            func reponse(with modalResponse: NSApplication.ModalResponse) {
+            func response(with modalResponse: NSApplication.ModalResponse) {
                 let map:[NSApplication.ModalResponse:Int] = [
                     .alertFirstButtonReturn: 0,
                     .alertSecondButtonReturn: 1,
@@ -262,11 +269,11 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                window.isVisible,
                !window.isMiniaturized {
                 alert.beginSheetModal(for: window) { modalResponse in
-                    reponse(with: modalResponse)
+                    response(with: modalResponse)
                 }
             } else {
                 let modalResponse = alert.runModal()
-                reponse(with: modalResponse)
+                response(with: modalResponse)
             }
         default:
             result(FlutterMethodNotImplemented)

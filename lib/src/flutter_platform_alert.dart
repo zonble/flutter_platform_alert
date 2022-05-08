@@ -16,7 +16,7 @@ int _positionToInt(AlertWindowPosition position) {
   return 0;
 }
 
-/// AAdditional options for FlutterPlatformAlert.
+/// Additional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
   /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
   /// instead of TaskDialogIndirect on Windows when calling
@@ -107,8 +107,19 @@ class FlutterPlatformAlert {
   /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
   /// other buttons.
   ///
-  /// You can also specify an icon by assigning the [iconPath] parameter. Please
-  /// note that we only support ICO files on Windows.
+  /// You can also specify an icon by assigning the [iconPath] parameter. The
+  /// parameter works on Windows, macOS and Linux. The path should be as the
+  /// path of an asset in your Flutter app, for example, if you can create an
+  /// image widget as
+  ///
+  /// ``` dart
+  /// Image.asset('images/tray_icon_original.png');
+  /// ```
+  ///
+  /// You should just pass 'images/tray_icon_original.png' to the [iconPath]
+  /// parameter.
+  ///
+  /// Please note that we only support ICO files on Windows.
   static Future<CustomButton> showCustomAlert({
     required String windowTitle,
     required String text,
@@ -139,8 +150,6 @@ class FlutterPlatformAlert {
             iconPath,
           ])
         : '';
-
-    print('exactIconPath $exactIconPath');
 
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
