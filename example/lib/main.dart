@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -51,23 +51,24 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
     List<MenuItem> items = [
       MenuItem(
         key: 'show_window',
-        title: 'Show Window',
+        label: 'Show Window',
       ),
       MenuItem(
         key: 'hide_window',
-        title: 'Hide Window',
+        label: 'Hide Window',
       ),
       MenuItem(
         key: 'show_alert_ok',
-        title: 'Show OK',
+        label: 'Show OK',
       ),
-      MenuItem.separator,
+      MenuItem.separator(),
       MenuItem(
         key: 'exit_app',
-        title: 'Exit App',
+        label: 'Exit App',
       ),
     ];
-    await trayManager.setContextMenu(items);
+    final menu = Menu(items: items);
+    await trayManager.setContextMenu(menu);
     setState(() {});
   }
 
