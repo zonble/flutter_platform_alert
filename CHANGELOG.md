@@ -1,3 +1,7 @@
+## 0.2.7
+
+- Downgrade min SDK to API level 19 for Android.
+
 ## 0.2.6
 
 - Allows adding icons to the native alert dialogs.
