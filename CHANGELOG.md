@@ -1,3 +1,7 @@
+## 0.2.8
+
+- Fixes a crash on iPadOS.
+
 ## 0.2.7
 
 - Downgrade min SDK to API level 19 for Android.

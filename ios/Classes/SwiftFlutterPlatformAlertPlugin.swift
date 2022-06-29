@@ -114,7 +114,12 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
         case "playAlertSound":
             let systemSoundID: SystemSoundID = 4095
             AudioServicesPlaySystemSound(systemSoundID)
+            result(true)
         case "showAlert":
+            guard let root = UIApplication.shared.windows.first?.rootViewController else {
+                result(FlutterError(code: "-101", message: "No root view", details: "The root view is nil"))
+                return
+            }
             guard let args = call.arguments as? [AnyHashable:Any] else {
                 result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
                 return
@@ -124,7 +129,8 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             let alertStyleString = args["alertStyle"] as? String ?? ""
             let alertStyle = FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
             let buttons = alertStyle.buttons
-            let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: buttons.count > 2 ? .actionSheet : .alert)
+            let preferredStyle: UIAlertController.Style  = .alert
+            let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: preferredStyle)
             for i in 0..<buttons.count {
                 let button = buttons[i]
                 let buttonStyle = style(forButtonTitle: button)
@@ -134,10 +140,13 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 }
                 controller.addAction(action)
             }
-            let root = UIApplication.shared.windows.first?.rootViewController
-            root?.show(controller, sender: nil)
+            root.present(controller, animated: true)
 
         case "showCustomAlert":
+            guard let root = UIApplication.shared.windows.first?.rootViewController else {
+                result(FlutterError(code: "-101", message: "No root view", details: "The root view is nil"))
+                return
+            }
             guard let args = call.arguments as? [AnyHashable:Any] else {
                 result(FlutterError(code: "-100", message: "No arguments", details: "The arguments object is nil"))
                 return
@@ -167,14 +176,12 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                     result(CustomAlertButton.negativeButton.rawValue)
                 })
             }
-            let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: actions.count > 2 ? .actionSheet : .alert)
+            let preferredStyle: UIAlertController.Style  = .alert
+            let controller = UIAlertController(title: windowTitle, message: text, preferredStyle: preferredStyle)
             for action in actions {
                 controller.addAction(action)
             }
-
-            let root = UIApplication.shared.windows.first?.rootViewController
-            root?.show(controller, sender: nil)
-
+            root.present(controller, animated: true)
 
         default:
             result(FlutterMethodNotImplemented)
