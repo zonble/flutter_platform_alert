@@ -242,6 +242,10 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 buttons.append(.negativeButton)
                 alert.addButton(withTitle: negativeButton)
                 index += 1
+                
+                if #available(macOS 11.0, *) {
+                    alert.buttons.last?.hasDestructiveAction = true
+                }
             }
             if buttons.isEmpty {
                 buttons.append(.positiveButton)
