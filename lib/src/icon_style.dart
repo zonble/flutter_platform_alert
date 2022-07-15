@@ -51,27 +51,3 @@ enum IconStyle {
   hand,
 }
 
-extension IconStyleToString on IconStyle {
-  String get stringValue {
-    switch (this) {
-      case IconStyle.none:
-        return 'none';
-      case IconStyle.exclamation:
-        return 'exclamation';
-      case IconStyle.warning:
-        return 'warning';
-      case IconStyle.information:
-        return 'information';
-      case IconStyle.asterisk:
-        return 'asterisk';
-      case IconStyle.question:
-        return 'question';
-      case IconStyle.stop:
-        return 'stop';
-      case IconStyle.error:
-        return 'error';
-      case IconStyle.hand:
-        return 'hand';
-    }
-  }
-}

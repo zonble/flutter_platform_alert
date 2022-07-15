@@ -31,53 +31,9 @@ enum AlertButton {
   other,
 }
 
-class AlertButtonHelper {
-  static AlertButton fromString(String string) {
-    switch (string) {
-      case "abort":
-        return AlertButton.abortButton;
-      case "cancel":
-        return AlertButton.cancelButton;
-      case "continue":
-        return AlertButton.continueButton;
-      case "ignore":
-        return AlertButton.ignoreButton;
-      case "no":
-        return AlertButton.noButton;
-      case "ok":
-        return AlertButton.okButton;
-      case "retry":
-        return AlertButton.retryButton;
-      case "try_again":
-        return AlertButton.tryAgainButton;
-      case "yes":
-        return AlertButton.yesButton;
-      default:
-        break;
-    }
-    return AlertButton.other;
-  }
-}
-
 enum CustomButton {
   positiveButton,
   negativeButton,
   neutralButton,
   other,
-}
-
-class CustomButtonHelper {
-  static CustomButton fromString(String string) {
-    switch (string) {
-      case "positive_button":
-        return CustomButton.positiveButton;
-      case "negative_button":
-        return CustomButton.negativeButton;
-      case "neutral_button":
-        return CustomButton.neutralButton;
-      default:
-        break;
-    }
-    return CustomButton.other;
-  }
 }

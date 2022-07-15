@@ -22,23 +22,3 @@ enum AlertButtonStyle {
   yesNoCancel,
 }
 
-extension AlertButtonStyleToString on AlertButtonStyle {
-  String get stringValue {
-    switch (this) {
-      case AlertButtonStyle.abortRetryIgnore:
-        return 'abortRetryIgnore';
-      case AlertButtonStyle.cancelTryContinue:
-        return 'cancelTryContinue';
-      case AlertButtonStyle.ok:
-        return 'ok';
-      case AlertButtonStyle.okCancel:
-        return 'okCancel';
-      case AlertButtonStyle.retryCancel:
-        return 'retryCancel';
-      case AlertButtonStyle.yesNo:
-        return 'yesNo';
-      case AlertButtonStyle.yesNoCancel:
-        return 'yesNoCancel';
-    }
-  }
-}

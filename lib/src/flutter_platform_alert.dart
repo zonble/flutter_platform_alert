@@ -2,15 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'helpers.dart';
 import 'icon_style.dart';
 
 import 'alert_button.dart';
 import 'alert_style.dart';
 import 'window_position.dart';
 import 'package:path/path.dart' as path;
-
-int _positionToInt(AlertWindowPosition position) =>
-    position == AlertWindowPosition.screenCenter ? 1 : 0;
 
 /// Additional options for FlutterPlatformAlert.
 class FlutterPlatformAlertOption {
@@ -90,7 +88,7 @@ class FlutterPlatformAlert {
       'iconStyle': iconStyleString,
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
-      'position': _positionToInt(windowPosition),
+      'position': positionToInt(windowPosition),
     });
     return AlertButtonHelper.fromString(result);
   }
@@ -156,7 +154,7 @@ class FlutterPlatformAlert {
       'neutralButtonTitle': neutralButtonTitle ?? '',
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
-      'position': _positionToInt(windowPosition),
+      'position': positionToInt(windowPosition),
       'iconPath': exactIconPath,
       'base64Icon': base64Icon,
     });
