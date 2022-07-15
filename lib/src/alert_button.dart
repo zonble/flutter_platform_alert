@@ -31,9 +31,17 @@ enum AlertButton {
   other,
 }
 
+/// Represents the buttons in [FlutterPlatformAlert.showCustomAlert].
 enum CustomButton {
+  /// The positive button.
   positiveButton,
+
+  /// The negative button.
   negativeButton,
+
+  /// The neutral button.
   neutralButton,
+
+  /// Other unknown button.
   other,
 }

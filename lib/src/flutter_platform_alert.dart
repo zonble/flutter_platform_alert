@@ -10,23 +10,28 @@ import 'alert_style.dart';
 import 'window_position.dart';
 import 'package:path/path.dart' as path;
 
-/// Additional options for FlutterPlatformAlert.
+/// Additional options for [FlutterPlatformAlert].
 class FlutterPlatformAlertOption {
   /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
-  /// instead of TaskDialogIndirect on Windows when calling
-  /// [FlutterPlatformAlert.showAlert].
+  /// instead of
+  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+  /// on Windows when calling [FlutterPlatformAlert.showAlert].
   ///
   /// The option only works on Windows.
   ///
   /// When [preferMessageBoxOnWindows] is false, you can also assign an
-  /// [additionalWindowTitleOnWindows]. Actually TaskDialogIndirect is a newer
-  /// API and looks much better than MessageBox.
+  /// [additionalWindowTitleOnWindows]. Actually
+  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+  /// is a newer API and looks much better than MessageBox.
   bool preferMessageBoxOnWindows = false;
 
-  /// [showAsLinksOnWindows] option applies TDF_USE_COMMAND_LINKS flag on
-  /// Windows while calling TaskDialogIndirect API. The option is only available
-  /// when calling [FlutterPlatformAlert.showCustomAlert] but it does not work
-  /// on [FlutterPlatformAlert.showAlert].
+  /// [showAsLinksOnWindows] option applies
+  /// [TDF_USE_COMMAND_LINKS](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
+  /// flag on Windows while calling
+  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+  /// API. The option is only available when calling
+  /// [FlutterPlatformAlert.showCustomAlert] but it does not work on
+  /// [FlutterPlatformAlert.showAlert].
   ///
   /// The option only works on Windows.
   bool showAsLinksOnWindows = false;
@@ -46,6 +51,8 @@ class FlutterPlatformAlertOption {
 
 /// Helps to play platform alert sound and show platform alert dialogs.
 class FlutterPlatformAlert {
+  FlutterPlatformAlert._();
+
   static const MethodChannel _channel = MethodChannel('flutter_platform_alert');
 
   /// Plays the system alert sound.
@@ -68,9 +75,22 @@ class FlutterPlatformAlert {
   /// dialog/alert. Once a user click on one of the button on it, the method
   /// returns the name of the button.
   ///
+  /// Using the API is much like calling
+  /// [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox)
+  /// API on Windows. You cannot change the title of the buttons on the dialog
+  /// window, but to choose a set of buttons by assigning [alertStyle]. If you
+  /// want to customize the buttons, you can use
+  /// [FlutterPlatformAlert.showCustomAlert] instead.
+  ///
   /// Please note that [iconStyle] is not implemented on mobile platforms like
   /// iOS and Android. On Windows, setting [iconStyle] also makes the system to
   /// play alert sounds and you don't need to call [playAlertSound] again.
+  ///
+  /// On windows, you can pick one of two implementation. One is using
+  /// MessageBox while another is using
+  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect).
+  /// You can do this by assigning the [options] parameter. See more details by
+  /// visiting [FlutterPlatformAlertOption].
   static Future<AlertButton> showAlert({
     required String windowTitle,
     required String text,
@@ -95,16 +115,19 @@ class FlutterPlatformAlert {
 
   /// Shows a platform alert dialog with custom button titles.
   ///
-  /// You can assign up to 3 buttons in the alert dialog. The method follows the
-  /// convention on Android. [positiveButtonTitle] is the title of the positive
-  /// button like for "OK" or "Yes", [negativeButtonTitle] is the title for the
-  /// negative button like "Cancel" or "No", while [neutralButtonTitle] is for
-  /// other buttons.
+  /// Using the API is much like calling
+  /// [AlertDialog](https://developer.android.com/reference/android/app/AlertDialog)
+  /// on Android,  you can assign up to 3 buttons in the alert dialog and
+  /// customize the titles of the buttons. [positiveButtonTitle] is the title of
+  /// the positive button like for "OK" or "Yes", [negativeButtonTitle] is the
+  /// title for the negative button like "Cancel" or "No", while
+  /// [neutralButtonTitle] is for other buttons. Once you leave the title of the
+  /// button empty, the button will not be shown.
   ///
   /// You can also specify an icon by assigning the [iconPath] parameter. The
-  /// parameter works on Android, Windows, macOS and Linux. The path should be
-  /// as the path of an asset in your Flutter app, for example, if you can
-  /// create an image widget as
+  /// parameter works on Android, Windows, macOS and Linux (iOS is not
+  /// supported). The path should be as the path of an asset in your Flutter
+  /// app, for example, if you can create an image widget as
   ///
   /// ``` dart
   /// Image.asset('images/tray_icon_original.png');
@@ -114,6 +137,12 @@ class FlutterPlatformAlert {
   /// parameter.
   ///
   /// Please note that we only support ICO files on Windows.
+  ///
+  /// On Windows, the API always call
+  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+  /// even you set the [FlutterPlatformAlertOption.preferMessageBoxOnWindows]
+  /// property in the [options] parameter to true.
+  ///
   static Future<CustomButton> showCustomAlert({
     required String windowTitle,
     required String text,
