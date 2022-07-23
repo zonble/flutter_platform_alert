@@ -258,7 +258,7 @@ static FlMethodResponse *show_custom_alert(FlutterPlatformAlertPlugin *self,
 
   g_autofree gchar *icon_path = get_string_value(args, "iconPath", &error);
 
-  if (strcmp(icon_path, "") != 0)
+  if (strcmp(icon_path, "") != 0) {
     // gtk_message_dialog_set_image is already deprecated but let us just
     // continue use it today.
 #pragma GCC diagnostic push
