@@ -1,7 +1,6 @@
 package net.zonble.flutter_platform_alert
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -27,7 +26,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
   @Suppress("UNCHECKED_CAST")
   @RequiresApi(Build.VERSION_CODES.N)
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result): Unit =
+  override fun onMethodCall(call: MethodCall, result: Result): Unit =
     when (call.method) {
       "playAlertSound" -> {
         val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -44,36 +43,45 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val windowTitle = args.getOrDefault("windowTitle", "")
           val text = args.getOrDefault("text", "")
           val alertStyle = args.getOrDefault("alertStyle", "ok")
+          val useMaterialBuilder = args.getOrDefault("useMaterialBuilder", false)
 
-          AlertDialog.Builder(
-            this.activity,
-            R.style.AlertDialogCustom
-          ).setTitle(windowTitle).setMessage(text).apply {
-            when (alertStyle) {
-              "abortRetryIgnore" ->
-                setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
-                  .setNeutralButton(R.string.ignore) { _, _ -> result.success("ignore") }
-                  .setNegativeButton(R.string.abort) { _, _ -> result.success("abort") }
-              "cancelTryContinue" ->
-                setPositiveButton(R.string.try_again) { _, _ -> result.success("try_again") }
-                  .setNeutralButton(R.string.continue_button) { _, _ -> result.success("continue") }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
-              "okCancel" ->
-                setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
-              "retryCancel" ->
-                setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
-              "yesNo" ->
-                setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
-                  .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
-              "yesNoCancel" ->
-                setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
-                  .setNeutralButton(R.string.cancel) { _, _ -> result.success("cancel") }
-                  .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
-              else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
+          val context = this.activity
+          if (context == null) {
+            print("no context")
+          } else {
+            val adapter: IDialogBuilderAdapter = if (useMaterialBuilder == true) {
+              MaterialAlertDialogBuilderAdapter(context)
+            } else {
+              AlertDialogBuilderAdapter(context)
             }
-          }.create().show()
+
+            adapter.setTitle(windowTitle).setMessage(text).apply {
+              when (alertStyle) {
+                "abortRetryIgnore" ->
+                  setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
+                    .setNeutralButton(R.string.ignore) { _, _ -> result.success("ignore") }
+                    .setNegativeButton(R.string.abort) { _, _ -> result.success("abort") }
+                "cancelTryContinue" ->
+                  setPositiveButton(R.string.try_again) { _, _ -> result.success("try_again") }
+                    .setNeutralButton(R.string.continue_button) { _, _ -> result.success("continue") }
+                    .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                "okCancel" ->
+                  setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
+                    .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                "retryCancel" ->
+                  setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
+                    .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                "yesNo" ->
+                  setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
+                    .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
+                "yesNoCancel" ->
+                  setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
+                    .setNeutralButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                    .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
+                else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
+              }
+            }.createAndShow()
+          }
         }
       }
       "showCustomAlert" -> {
@@ -87,50 +95,60 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
           val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
           val base64Icon = args.getOrDefault("base64Icon", "")
+          val useMaterialBuilder = args.getOrDefault("useMaterialBuilder", false)
 
-          val builder = AlertDialog.Builder(
-            this.activity,
-            R.style.AlertDialogCustom
-          ).setTitle(windowTitle).setMessage(text)
-          var buttonCount = 0
-          if (positiveButtonTitle.isNotEmpty()) {
-            builder.setPositiveButton(positiveButtonTitle) { _, _ -> result.success("positive_button") }
-            buttonCount += 1
-          }
-          if (negativeButtonTitle.isNotEmpty()) {
-            builder.setNegativeButton(negativeButtonTitle) { _, _ -> result.success("negative_button") }
-            buttonCount += 1
-          }
-          if (negativeButtonTitle.isNotEmpty()) {
-            builder.setNeutralButton(neutralButtonTitle) { _, _ -> result.success("neutral_button") }
-            buttonCount += 1
-          }
-          if (buttonCount==0) {
-            builder.setPositiveButton("OK") { _, _ -> result.success("other") }
-            buttonCount += 1
-          }
+          val context = this.activity
+          if (context == null) {
+            print("no context")
+          } else {
+            val adapter: IDialogBuilderAdapter = if (useMaterialBuilder == true) {
+              MaterialAlertDialogBuilderAdapter(context)
+            } else {
+              AlertDialogBuilderAdapter(context)
+            }
+            adapter.setTitle(windowTitle).setMessage(text)
 
-          if (base64Icon.isNotEmpty()) {
-            val decodedString = Base64.decode(base64Icon,Base64.DEFAULT)
-            val decodedByte: Bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-            val icon: Drawable = BitmapDrawable(activity?.resources, decodedByte)
-            builder.setIcon(icon)
-          }
+            var buttonCount = 0
+            if (positiveButtonTitle.isNotEmpty()) {
+              adapter.setPositiveButton(positiveButtonTitle) { _, _ -> result.success("positive_button") }
+              buttonCount += 1
+            }
+            if (negativeButtonTitle.isNotEmpty()) {
+              adapter.setNegativeButton(negativeButtonTitle) { _, _ -> result.success("negative_button") }
+              buttonCount += 1
+            }
+            if (negativeButtonTitle.isNotEmpty()) {
+              adapter.setNeutralButton(neutralButtonTitle) { _, _ -> result.success("neutral_button") }
+              buttonCount += 1
+            }
+            if (buttonCount == 0) {
+              adapter.setPositiveButton("OK") { _, _ -> result.success("other") }
+              buttonCount += 1
+            }
 
-          builder.create().show()
+            if (base64Icon.isNotEmpty()) {
+              val decodedString = Base64.decode(base64Icon, Base64.DEFAULT)
+              val decodedByte: Bitmap =
+                BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+              val icon: Drawable = BitmapDrawable(activity?.resources, decodedByte)
+              adapter.setIcon(icon)
+            }
+
+            adapter.createAndShow()
+          }
         }
       }
       else -> result.notImplemented()
     }
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_platform_alert")
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
   }
 
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
     context = null
   }
