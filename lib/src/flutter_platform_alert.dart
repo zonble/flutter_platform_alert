@@ -41,11 +41,25 @@ class FlutterPlatformAlertOption {
   /// The option only works on Windows.
   String? additionalWindowTitleOnWindows;
 
+  /// If the plug-in should call MaterialAlertDialogBuilder instead of
+  /// AlertDialog.Builder on Android.
+  ///
+  /// If you prefer MaterialAlertDialogBuilder, you need to update the
+  /// `AndroidManifest.xml` file for your Android app. Please change your theme
+  /// to some `Theme.AppCompat based themes. For example, you can change the
+  /// theme settings of the activity tag to
+  ///
+  /// ```
+  /// android:theme="@style/Theme.AppCompat.Light"
+  /// ```
+  bool useMaterialBuilder = false;
+
   /// Creates a new instance.
   FlutterPlatformAlertOption({
     this.preferMessageBoxOnWindows = false,
     this.showAsLinksOnWindows = false,
     this.additionalWindowTitleOnWindows,
+    this.useMaterialBuilder = false,
   });
 }
 
@@ -109,6 +123,7 @@ class FlutterPlatformAlert {
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'position': positionToInt(windowPosition),
+      'useMaterialBuilder': options?.useMaterialBuilder ?? false,
     });
     return AlertButtonHelper.fromString(result);
   }
@@ -117,7 +132,7 @@ class FlutterPlatformAlert {
   ///
   /// Using the API is much like calling
   /// [AlertDialog](https://developer.android.com/reference/android/app/AlertDialog)
-  /// on Android,  you can assign up to 3 buttons in the alert dialog and
+  /// on Android, you can assign up to 3 buttons in the alert dialog and
   /// customize the titles of the buttons. [positiveButtonTitle] is the title of
   /// the positive button like for "OK" or "Yes", [negativeButtonTitle] is the
   /// title for the negative button like "Cancel" or "No", while
@@ -186,6 +201,7 @@ class FlutterPlatformAlert {
       'position': positionToInt(windowPosition),
       'iconPath': exactIconPath,
       'base64Icon': base64Icon,
+      'useMaterialBuilder': options?.useMaterialBuilder ?? false,
     });
     return CustomButtonHelper.fromString(result);
   }

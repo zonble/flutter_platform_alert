@@ -255,6 +255,25 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                   },
                   title: const Text(
                       'Show Positive/Negative/Neutral (as links on windows)')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showCustomAlert(
+                      windowTitle: 'This ia title',
+                      text: 'This is body',
+                      positiveButtonTitle: "Positive",
+                      negativeButtonTitle: "Negative",
+                      neutralButtonTitle: "Neutral",
+                      iconPath: Platform.isWindows
+                          ? 'images/tray_icon_original.ico'
+                          : 'images/tray_icon_original.png',
+                      options: FlutterPlatformAlertOption(
+                          additionalWindowTitleOnWindows: 'Window title',
+                          useMaterialBuilder: true),
+                    );
+                    print(result);
+                  },
+                  title: const Text(
+                      'Show Positive/Negative/Neutral using Material Design on Android')),
             ])));
   }
 
