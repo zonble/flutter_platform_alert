@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Support destructive button on macOS.
+
 ## 0.2.8
 
 - Fixes a crash on iPadOS.
