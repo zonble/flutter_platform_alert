@@ -3,6 +3,7 @@ package net.zonble.flutter_platform_alert
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -47,7 +48,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
           AlertDialog.Builder(
             this.activity,
-            R.style.AlertDialogCustom
+            getDialogStyle()
           ).setTitle(windowTitle).setMessage(text).apply {
             when (alertStyle) {
               "abortRetryIgnore" ->
@@ -90,7 +91,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
           val builder = AlertDialog.Builder(
             this.activity,
-            R.style.AlertDialogCustom
+            getDialogStyle()
           ).setTitle(windowTitle).setMessage(text)
           var buttonCount = 0
           if (positiveButtonTitle.isNotEmpty()) {
@@ -151,4 +152,15 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   }
 
   //endregion
+
+  private fun getDialogStyle(): Int {
+    if (this.context != null) {
+        val nightModeFlags: Int = this.context!!.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> return AlertDialog.THEME_DEVICE_DEFAULT_DARK
+        }
+    }
+    return AlertDialog.THEME_DEVICE_DEFAULT_LIGHT
+  }
 }
