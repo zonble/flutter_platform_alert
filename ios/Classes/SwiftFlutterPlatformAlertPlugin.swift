@@ -172,7 +172,7 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             if let negativeButton = args["negativeButtonTitle"] as? String,
                negativeButton.isEmpty == false {
                 let buttonStyle = style(forButtonTitle: negativeButton)
-                actions.append(UIAlertAction(title: negativeButton, style: buttonStyle) { action in
+                actions.append(UIAlertAction(title: negativeButton, style: .destructive) { action in
                     result(CustomAlertButton.negativeButton.rawValue)
                 })
             }
