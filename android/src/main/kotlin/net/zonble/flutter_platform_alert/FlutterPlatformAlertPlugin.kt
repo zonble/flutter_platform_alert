@@ -102,7 +102,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             builder.setNegativeButton(negativeButtonTitle) { _, _ -> result.success("negative_button") }
             buttonCount += 1
           }
-          if (negativeButtonTitle.isNotEmpty()) {
+          if (neutralButtonTitle.isNotEmpty()) {
             builder.setNeutralButton(neutralButtonTitle) { _, _ -> result.success("neutral_button") }
             buttonCount += 1
           }
@@ -118,7 +118,13 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             builder.setIcon(icon)
           }
 
-          builder.create().show()
+          // Set a custom style for the dialog builder and override the color of the negative button
+          val alertDialog = builder.create()
+          alertDialog.setOnShowListener {
+            val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            negativeButton?.setTextColor(activity?.resources?.getColor(android.R.color.holo_red_dark)!!)
+          }
+          alertDialog.show()
         }
       }
       else -> result.notImplemented()
