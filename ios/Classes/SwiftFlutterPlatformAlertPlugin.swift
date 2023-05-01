@@ -181,6 +181,12 @@ public class SwiftFlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             for action in actions {
                 controller.addAction(action)
             }
+
+            // Set the preferred action to the negative button
+            if let negativeAction = actions.first(where: { $0.style == .destructive }) {
+                controller.preferredAction = negativeAction
+            }
+
             root.present(controller, animated: true)
 
         default:
