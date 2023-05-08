@@ -38,15 +38,16 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         result.success(null)
       }
       "showAlert" -> {
-        val args = call.arguments as? HashMap<String, String>
+        val args = call.arguments as? HashMap<String, Any>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "")
-          val text = args.getOrDefault("text", "")
-          val alertStyle = args.getOrDefault("alertStyle", "ok")
+          val windowTitle = args.getOrDefault("windowTitle", "") as String
+          val text = args.getOrDefault("text", "") as String
+          val alertStyle = args.getOrDefault("alertStyle", "ok") as String
+          val dismissOnTapOutside = args.getOrDefault("dismissOnTapOutside", false) as Boolean
 
-          AlertDialog.Builder(
+          val builder = AlertDialog.Builder(
             this.activity,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text).apply {
@@ -74,20 +75,24 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                   .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
               else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
             }
-          }.create().show()
+          }
+          val alertDialog = builder.create()
+          alertDialog.setCanceledOnTouchOutside(dismissOnTapOutside)
+          alertDialog.show()
         }
       }
       "showCustomAlert" -> {
-        val args = call.arguments as? HashMap<String, String>
+        val args = call.arguments as? HashMap<String, Any>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "")
-          val text = args.getOrDefault("text", "")
-          val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "")
-          val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
-          val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
-          val base64Icon = args.getOrDefault("base64Icon", "")
+          val windowTitle = args.getOrDefault("windowTitle", "") as String
+          val text = args.getOrDefault("text", "") as String
+          val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "") as String
+          val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "") as String
+          val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "") as String
+          val base64Icon = args.getOrDefault("base64Icon", "") as String
+          val dismissOnTapOutside = args.getOrDefault("dismissOnTapOutside", false) as Boolean
 
           val builder = AlertDialog.Builder(
             this.activity,
@@ -120,6 +125,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
           // Set a custom style for the dialog builder and override the color of the negative button
           val alertDialog = builder.create()
+          alertDialog.setCanceledOnTouchOutside(dismissOnTapOutside) // prevent dismissal on outside click
           alertDialog.setOnShowListener {
             val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             negativeButton?.setTextColor(activity?.resources?.getColor(android.R.color.holo_red_dark)!!)

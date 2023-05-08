@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'helpers.dart';
-import 'icon_style.dart';
+import 'package:path/path.dart' as path;
 
 import 'alert_button.dart';
 import 'alert_style.dart';
+import 'helpers.dart';
+import 'icon_style.dart';
 import 'window_position.dart';
-import 'package:path/path.dart' as path;
 
 /// Additional options for [FlutterPlatformAlert].
 class FlutterPlatformAlertOption {
@@ -98,6 +98,7 @@ class FlutterPlatformAlert {
     IconStyle iconStyle = IconStyle.none,
     FlutterPlatformAlertOption? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
+    bool dismissOnTapOutside = false,
   }) async {
     final alertStyleString = alertStyle.stringValue;
     final iconStyleString = iconStyle.stringValue;
@@ -109,6 +110,7 @@ class FlutterPlatformAlert {
       'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
       'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
       'position': positionToInt(windowPosition),
+      'dismissOnTapOutside': dismissOnTapOutside,
     });
     return AlertButtonHelper.fromString(result);
   }
@@ -153,6 +155,7 @@ class FlutterPlatformAlert {
     FlutterPlatformAlertOption? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
     String? iconPath = '',
+    bool dismissOnTapOutside = false,
   }) async {
     final iconStyleString = iconStyle.stringValue;
 
@@ -186,6 +189,7 @@ class FlutterPlatformAlert {
       'position': positionToInt(windowPosition),
       'iconPath': exactIconPath,
       'base64Icon': base64Icon,
+      'dismissOnTapOutside': dismissOnTapOutside,
     });
     return CustomButtonHelper.fromString(result);
   }
