@@ -72,6 +72,7 @@ jobs:
       - name: Build Linux
         if: startsWith(matrix.os, 'ubuntu')
         run: |
+          sudo sudo apt-get update
           sudo apt-get install appindicator3-0.1 libappindicator3-dev
           flutter build linux
         working-directory: ${{ github.workspace }}/flutter_platform_alert/example
