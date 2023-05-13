@@ -4,7 +4,7 @@ version: 0.3.0
 homepage: https://github.com/zonble/flutter_platform_alert
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
@@ -32,4 +32,16 @@ flutter:
       linux:
         pluginClass: FlutterPlatformAlertPlugin
 
-  
+screenshots:
+  - description: "flutter_platform_alert on Android"
+    path: screenshot_android.jpg
+  - description: "flutter_platform_alert on iOS"
+    path: screenshot_ios.png
+  - description: "flutter_platform_alert on Linux."
+    path: screenshot_linux.png
+  - description: "flutter_platform_alert on macOS."
+    path: screenshot_macos.png
+  - description: "flutter_platform_alert on Windows."
+    path: screenshot_windows.png
+  - description: "flutter_platform_alert on Windows 11."
+    path: screenshot_windows_11.png
