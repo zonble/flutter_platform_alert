@@ -47,7 +47,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev liblzma-dev
-          sudo apt-get install -y appindicator3-1 libappindicator3-1
+          sudo apt-get install -y libayatana-appindicator3-dev
       - name: Enable desktop support
         run: |
           flutter config --enable-linux-desktop	
