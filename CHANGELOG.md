@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Support Flutter 3.10.x.
+
 ## 0.3.0
 
 - Support destructive button on macOS.
