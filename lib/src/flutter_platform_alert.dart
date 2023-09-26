@@ -2,52 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'alert_options/platform_alert_options.dart';
 import 'helpers.dart';
-import 'icon_style.dart';
+import 'styles/icon_style.dart';
 
 import 'alert_button.dart';
-import 'alert_style.dart';
+import 'styles/alert_style.dart';
 import 'window_position.dart';
 import 'package:path/path.dart' as path;
-
-/// Additional options for [FlutterPlatformAlert].
-class FlutterPlatformAlertOption {
-  /// [preferMessageBoxOnWindows] represents if you want to use MessageBox API
-  /// instead of
-  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
-  /// on Windows when calling [FlutterPlatformAlert.showAlert].
-  ///
-  /// The option only works on Windows.
-  ///
-  /// When [preferMessageBoxOnWindows] is false, you can also assign an
-  /// [additionalWindowTitleOnWindows]. Actually
-  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
-  /// is a newer API and looks much better than MessageBox.
-  bool preferMessageBoxOnWindows = false;
-
-  /// [showAsLinksOnWindows] option applies
-  /// [TDF_USE_COMMAND_LINKS](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
-  /// flag on Windows while calling
-  /// [TaskDialogIndirect](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
-  /// API. The option is only available when calling
-  /// [FlutterPlatformAlert.showCustomAlert] but it does not work on
-  /// [FlutterPlatformAlert.showAlert].
-  ///
-  /// The option only works on Windows.
-  bool showAsLinksOnWindows = false;
-
-  /// An additional window title.
-  ///
-  /// The option only works on Windows.
-  String? additionalWindowTitleOnWindows;
-
-  /// Creates a new instance.
-  FlutterPlatformAlertOption({
-    this.preferMessageBoxOnWindows = false,
-    this.showAsLinksOnWindows = false,
-    this.additionalWindowTitleOnWindows,
-  });
-}
 
 /// Helps to play platform alert sound and show platform alert dialogs.
 class FlutterPlatformAlert {
@@ -63,7 +25,7 @@ class FlutterPlatformAlert {
   /// It makes an iPhone to vibrate on iOS.
   static Future<void> playAlertSound(
       {IconStyle iconStyle = IconStyle.none}) async {
-    final iconStyleString = iconStyle.stringValue;
+    final iconStyleString = iconStyle.name;
     await _channel.invokeMethod('playAlertSound', {
       'iconStyle': iconStyleString,
     });
@@ -96,19 +58,17 @@ class FlutterPlatformAlert {
     required String text,
     AlertButtonStyle alertStyle = AlertButtonStyle.ok,
     IconStyle iconStyle = IconStyle.none,
-    FlutterPlatformAlertOption? options,
+    PlatformAlertOptions? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
   }) async {
-    final alertStyleString = alertStyle.stringValue;
-    final iconStyleString = iconStyle.stringValue;
+    options ??= PlatformAlertOptions();
     final result = await _channel.invokeMethod('showAlert', {
       'windowTitle': windowTitle,
       'text': text,
-      'alertStyle': alertStyleString,
-      'iconStyle': iconStyleString,
-      'preferMessageBox': options?.preferMessageBoxOnWindows ?? false,
-      'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
+      'alertStyle': alertStyle.stringValue,
+      'iconStyle': iconStyle.stringValue,
       'position': positionToInt(windowPosition),
+      ...options.toJson(),
     });
     return AlertButtonHelper.fromString(result);
   }
@@ -147,17 +107,19 @@ class FlutterPlatformAlert {
     required String windowTitle,
     required String text,
     IconStyle iconStyle = IconStyle.none,
-    String? positiveButtonTitle = '',
-    String? negativeButtonTitle = '',
-    String? neutralButtonTitle = '',
-    FlutterPlatformAlertOption? options,
+    String? positiveButtonTitle,
+    String? negativeButtonTitle,
+    String? neutralButtonTitle,
+    PlatformAlertOptions? options,
     AlertWindowPosition windowPosition = AlertWindowPosition.parentWindowCenter,
-    String? iconPath = '',
+    String iconPath = '',
   }) async {
-    final iconStyleString = iconStyle.stringValue;
+    positiveButtonTitle ??= '';
+    negativeButtonTitle ??= '';
+    neutralButtonTitle ??= '';
+    options ??= PlatformAlertOptions();
 
     final base64Icon = await () async {
-      if (iconPath == null) return '';
       if (iconPath.isEmpty) return '';
 
       final imageData = await rootBundle.load(iconPath);
@@ -166,7 +128,7 @@ class FlutterPlatformAlert {
     }();
 
     var context = path.Context(style: path.Style.platform);
-    final exactIconPath = iconPath != null && iconPath.isNotEmpty
+    final exactIconPath = iconPath.isNotEmpty
         ? context.joinAll([
             path.dirname(Platform.resolvedExecutable),
             'data/flutter_assets',
@@ -177,15 +139,14 @@ class FlutterPlatformAlert {
     final result = await _channel.invokeMethod('showCustomAlert', {
       'windowTitle': windowTitle,
       'text': text,
-      'iconStyle': iconStyleString,
-      'positiveButtonTitle': positiveButtonTitle ?? '',
-      'negativeButtonTitle': negativeButtonTitle ?? '',
-      'neutralButtonTitle': neutralButtonTitle ?? '',
-      'additionalWindowTitle': options?.additionalWindowTitleOnWindows ?? '',
-      'showAsLinksOnWindows': options?.showAsLinksOnWindows ?? false,
+      'iconStyle': iconStyle.name,
+      'positiveButtonTitle': positiveButtonTitle,
+      'negativeButtonTitle': negativeButtonTitle,
+      'neutralButtonTitle': neutralButtonTitle,
       'position': positionToInt(windowPosition),
       'iconPath': exactIconPath,
       'base64Icon': base64Icon,
+      ...options.toJson(),
     });
     return CustomButtonHelper.fromString(result);
   }

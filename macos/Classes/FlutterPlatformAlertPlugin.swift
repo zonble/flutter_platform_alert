@@ -1,7 +1,7 @@
 import Cocoa
 import FlutterMacOS
 
-fileprivate enum AlerButton: String {
+fileprivate enum AlertButton: String {
   case abortButton = "abort"
   case cancelButton = "cancel"
   case continueButton = "continue"
@@ -56,7 +56,7 @@ fileprivate enum FlutterPlatformAlertStyle: String {
         }
     }
 
-    func handle(response: NSApplication.ModalResponse) -> AlerButton {
+    func handle(response: NSApplication.ModalResponse) -> AlertButton {
         switch self {
         case .abortRetryIgnore:
             switch response {
@@ -148,7 +148,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
     }
 
     private var registrar: FlutterPluginRegistrar!;
-    
+
     public init(_ registrar: FlutterPluginRegistrar) {
         super.init()
         self.registrar = registrar
@@ -182,7 +182,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 alert.addButton(withTitle: button)
             }
             alert.alertStyle = iconStyle.alertStyle
-            
+
             NSApp.activate(ignoringOtherApps: true)
             let window = self.registrar.view?.window
             if runAsSheet,
@@ -242,9 +242,9 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
                 buttons.append(.negativeButton)
                 alert.addButton(withTitle: negativeButton)
                 index += 1
-                
+
                 if #available(macOS 11.0, *) {
-                    alert.buttons.last?.hasDestructiveAction = true
+                    alert.buttons.last?.hasDestructiveAction = args["isNegativeActionDestructive"] as! Bool
                 }
             }
             if buttons.isEmpty {

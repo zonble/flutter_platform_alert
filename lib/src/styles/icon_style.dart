@@ -50,4 +50,3 @@ enum IconStyle {
   /// - GTK_MESSAGE_ERROR on Linux.
   hand,
 }
-
