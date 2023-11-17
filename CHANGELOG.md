@@ -1,3 +1,7 @@
+## 0.5.0
+
+- Fix issues on Android.
+
 ## 0.4.0
 
 - Support Flutter 3.10.x.
