@@ -42,10 +42,10 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "") as String
-          val text = args.getOrDefault("text", "") as String
-          val alertStyle = args.getOrDefault("alertStyle", "ok") as String
-          val dismissOnTapOutside = args.getOrDefault("dismissOnTapOutside", false) as Boolean
+          val windowTitle = (args["windowTitle"] ?: "") as String
+          val text = (args["text"] ?: "") as String
+          val alertStyle = (args["alertStyle"] ?: "ok") as String
+          val dismissOnTapOutside = (args["dismissOnTapOutside"] ?: false) as Boolean
 
           val builder = AlertDialog.Builder(
             this.activity,
@@ -86,13 +86,13 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "") as String
-          val text = args.getOrDefault("text", "") as String
-          val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "") as String
-          val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "") as String
-          val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "") as String
-          val base64Icon = args.getOrDefault("base64Icon", "") as String
-          val dismissOnTapOutside = args.getOrDefault("dismissOnTapOutside", false) as Boolean
+          val windowTitle = (args["windowTitle"] ?: "") as String
+          val text = (args["text"] ?: "") as String
+          val positiveButtonTitle = (args["positiveButtonTitle"] ?: "") as String
+          val negativeButtonTitle = (args["negativeButtonTitle"] ?: "") as String
+          val neutralButtonTitle = (args["neutralButtonTitle"] ?: "") as String
+          val base64Icon = (args["base64Icon"] ?: "") as String
+          val dismissOnTapOutside = (args["dismissOnTapOutside"] ?: false) as Boolean
 
           val builder = AlertDialog.Builder(
             this.activity,
