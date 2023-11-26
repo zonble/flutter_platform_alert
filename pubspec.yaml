@@ -34,9 +34,11 @@ flutter:
 
 screenshots:
   - description: "flutter_platform_alert on Android"
-    path: screenshot_android.jpg
+    path: screenshot_android.png
   - description: "flutter_platform_alert on iOS"
     path: screenshot_ios.png
+  - description: "flutter_platform_alert sheet on iOS"
+    path: screenshot_ios_sheet.png
   - description: "flutter_platform_alert on Linux."
     path: screenshot_linux.png
   - description: "flutter_platform_alert on macOS."

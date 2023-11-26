@@ -71,14 +71,19 @@ To show an alert dialog with custom button titles:
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 await FlutterPlatformAlert.playAlertSound();
 
-final clickedButton = await FlutterPlatformAlert.showCustomAlert(
-    windowTitle: 'This ia title',
-    text: 'This is body',
-    positiveButtonTitle: "Positive",
-    negativeButtonTitle: "Negative",
-    neutralButtonTitle: "Neutral",
-    additionalWindowTitleOnWindows: 'Window title',
-    showAsLinksOnWindows: true);
+final result = await FlutterPlatformAlert.showCustomAlert(
+  windowTitle: 'This is title',
+  text: 'This is body',
+  positiveButtonTitle: "Positive",
+  negativeButtonTitle: "Negative",
+  neutralButtonTitle: "Neutral",
+  options: PlatformAlertOptions(
+    windows: WindowsAlertOptions(
+      additionalWindowTitle: 'Window title',
+      showAsLinks: true,
+    ),
+  ),
+);
 ```
 
 ## Platform Alert Dialogs
@@ -158,30 +163,34 @@ The package in released under MIT License.
 
 ## Screenshots
 
-iOS 15 in Simulator
+Android 13 on Pixel 6 emulator
 
-![iOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_ios.png)
+![Android](./screenshot_android.png)
 
-Android 11 on Samsung phone
+iOS 16 in Simulator
 
-![Android](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_android.jpg)
+![iOS](./screenshot_ios.png)
+
+iOS 15 in Simulator (IosAlertOptions: alertStyle = IosAlertStyle.actionSheet)
+
+![iOS](./screenshot_ios_sheet.png)
 
 macOS 12 Monterey
 
-![macOS](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_macos.png)
+![macOS](./screenshot_macos.png)
 
 Windows 10 with MessageBox API
 
-![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows.png)
+![Windows](./screenshot_windows.png)
 
 Windows 11 with TaskDialogIndirect API
 
-![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows_11.png)
+![Windows](./screenshot_windows_11.png)
 
 Windows 11 with TaskDialogIndirect API that shows buttons as links
 
-![Windows](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_windows_11_links.png)
+![Windows](./screenshot_windows_11_links.png)
 
 Ubuntu 21.10
 
-![linux](https://raw.githubusercontent.com/zonble/flutter_platform_alert/main/screenshot_linux.png)
+![linux](./screenshot_linux.png)
