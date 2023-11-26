@@ -1,3 +1,7 @@
+## 0.5.1
+
+- Fix issues on Android.
+
 ## 0.5.0
 
 - Breaking refactor by replacing FlutterPlatformAlertOption with PlatformAlertOptions.
