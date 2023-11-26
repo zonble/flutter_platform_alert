@@ -41,6 +41,7 @@ android {
     }
 
     defaultConfig {
+        namespace "net.zonble.flutter_platform_alert"
         minSdkVersion 19
     }
 }
