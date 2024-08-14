@@ -9,6 +9,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
+    ext.androidXCore = "1.6.0"
 }
 
 allprojects {
@@ -30,9 +32,3 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
-ext {
-    compileSdkVersion   = 34
-    targetSdkVersion    = 34
-    appCompatVersion    = "1.7.0"
-    androidXCore = "1.6.0"
-}
