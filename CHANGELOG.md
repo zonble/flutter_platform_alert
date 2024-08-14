@@ -1,4 +1,4 @@
-## 0.5.2
+## 0.5.3
 
 - Fix Android build for Flutter 3.24.0.
 
