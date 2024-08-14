@@ -1,7 +1,8 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/example/linux",
-    "cmake.configureOnOpen": true,
-    "files.associations": {
-      "cstring": "cpp"
-    }
-  }
+  "cmake.sourceDirectory": "${workspaceFolder}/example/linux",
+  "cmake.configureOnOpen": true,
+  "files.associations": {
+    "cstring": "cpp"
+  },
+  "dart.flutterSdkPath": ".fvm/versions/3.24.0"
+}
