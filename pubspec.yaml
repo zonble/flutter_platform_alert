@@ -1,22 +1,20 @@
 name: flutter_platform_alert
-description: A plugin helps to call native API to play alert sound and show alert dialogs. For example, it bridges MessageBox and TaskDialogIndirect on Windows.
 version: 0.5.3
 homepage: https://github.com/zonble/flutter_platform_alert
-
+description: A plugin helps to call native API to play alert sound and show alert dialogs. For example, it bridges MessageBox and TaskDialogIndirect on Windows.
 environment:
   sdk: ">=2.17.0 <4.0.0"
   flutter: ">=1.20.0"
-
 dependencies:
+  path: ^1.8.0
   flutter:
     sdk: flutter
-  path: ^1.8.0
-
 dev_dependencies:
+  flutter_lints: ">=1.0.0 <5.0.0"
+  import_sorter: 4.6.0
+  pubspec_dependency_sorter: 1.0.4
   flutter_test:
     sdk: flutter
-  flutter_lints: ">=1.0.0 <5.0.0"
-
 flutter:
   plugin:
     platforms:
@@ -31,19 +29,21 @@ flutter:
         pluginClass: FlutterPlatformAlertPlugin
       linux:
         pluginClass: FlutterPlatformAlertPlugin
-
+import_sorter:
+  emojis: false
+  comments: false
 screenshots:
-  - description: "flutter_platform_alert on Android"
+  - description: flutter_platform_alert on Android
     path: screenshot_android.png
-  - description: "flutter_platform_alert on iOS"
+  - description: flutter_platform_alert on iOS
     path: screenshot_ios.png
-  - description: "flutter_platform_alert sheet on iOS"
+  - description: flutter_platform_alert sheet on iOS
     path: screenshot_ios_sheet.png
-  - description: "flutter_platform_alert on Linux."
+  - description: flutter_platform_alert on Linux.
     path: screenshot_linux.png
-  - description: "flutter_platform_alert on macOS."
+  - description: flutter_platform_alert on macOS.
     path: screenshot_macos.png
-  - description: "flutter_platform_alert on Windows."
+  - description: flutter_platform_alert on Windows.
     path: screenshot_windows.png
-  - description: "flutter_platform_alert on Windows 11."
+  - description: flutter_platform_alert on Windows 11.
     path: screenshot_windows_11.png

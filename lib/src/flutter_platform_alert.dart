@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'alert_options/platform_alert_options.dart';
-import 'helpers.dart';
-import 'styles/icon_style.dart';
+
+import 'package:path/path.dart' as path;
 
 import 'alert_button.dart';
+import 'alert_options/platform_alert_options.dart';
+import 'helpers.dart';
 import 'styles/alert_style.dart';
+import 'styles/icon_style.dart';
 import 'window_position.dart';
-import 'package:path/path.dart' as path;
 
 /// Helps to play platform alert sound and show platform alert dialogs.
 class FlutterPlatformAlert {
