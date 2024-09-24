@@ -28,10 +28,6 @@ jobs:
       #   - name: Build macOS
       #     run: flutter build macos
       #     working-directory: ${{ github.workspace }}/flutter_platform_alert/example
-      - name: Build iOS
-        run: |
-          flutter build ios --debug --no-codesign --simulator
-        working-directory: ${{ github.workspace }}/flutter_platform_alert/example
       - name: Cleans up iOS project
         run: |
           pod deintegrate
