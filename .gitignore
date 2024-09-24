@@ -10,3 +10,4 @@ build/
 
 # FVM Version Cache
 .fvm/
+.build/
