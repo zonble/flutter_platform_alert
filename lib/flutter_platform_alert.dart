@@ -19,8 +19,14 @@
 /// - Linux: [GtkMessageDialog](https://docs.gtk.org/gtk3/class.MessageDialog.html)
 library flutter_platform_alert;
 
+export 'src/alert_options/ios_alert_options.dart';
+export 'src/alert_options/macos_alert_options.dart';
+export 'src/alert_options/platform_alert_options.dart';
+export 'src/alert_options/windows_alert_options.dart';
+export 'src/styles/alert_style.dart';
+export 'src/styles/icon_style.dart';
+export 'src/styles/ios_alert_style.dart';
+export 'src/styles/ios_button_style.dart';
 export 'src/alert_button.dart';
-export 'src/alert_style.dart';
-export 'src/icon_style.dart';
 export 'src/flutter_platform_alert.dart';
 export 'src/window_position.dart';

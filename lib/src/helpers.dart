@@ -1,4 +1,7 @@
-import '../flutter_platform_alert.dart';
+import 'alert_button.dart';
+import 'styles/alert_style.dart';
+import 'styles/icon_style.dart';
+import 'window_position.dart';
 
 class AlertButtonHelper {
   static AlertButton fromString(String string) {

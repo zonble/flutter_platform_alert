@@ -21,4 +21,3 @@ enum AlertButtonStyle {
   /// Yes, no and cancel.
   yesNoCancel,
 }
-

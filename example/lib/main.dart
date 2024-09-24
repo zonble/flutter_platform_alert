@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text('Play Alert Sounds',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               ListTile(
                   onTap: () async {
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: Text('Standard Alert with Styles',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               ListTile(
                   onTap: () async {
@@ -115,8 +115,8 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                       text: '芋頭西米露 保力達蠻牛',
                       iconStyle: IconStyle.exclamation,
                       alertStyle: AlertButtonStyle.abortRetryIgnore,
-                      options: FlutterPlatformAlertOption(
-                        preferMessageBoxOnWindows: true,
+                      options: PlatformAlertOptions(
+                        windows: WindowsAlertOptions(preferMessageBox: true),
                       ),
                     );
                     print(result);
@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                      windowTitle: 'This ia title',
+                      windowTitle: 'This is title',
                       text: 'This is body',
                       iconStyle: IconStyle.warning,
                     );
@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                      windowTitle: 'This ia title',
+                      windowTitle: 'This is title',
                       text: 'This is body',
                       iconStyle: IconStyle.information,
                     );
@@ -146,25 +146,39 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                      windowTitle: 'This ia title',
+                      windowTitle: 'This is title',
                       text: 'This is body',
                       iconStyle: IconStyle.error,
                     );
                     print(result);
                   },
                   title: const Text('Show error style')),
+              ListTile(
+                onTap: () async {
+                  final result = await FlutterPlatformAlert.showAlert(
+                    options: PlatformAlertOptions(
+                      ios: IosAlertOptions(
+                          alertStyle: IosAlertStyle.actionSheet),
+                    ),
+                    windowTitle: 'This is title',
+                    text: 'This is body',
+                  );
+                  print(result);
+                },
+                title: const Text('Show OK (as action sheet on iOS)'),
+              ),
               const Divider(),
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title', text: 'This is body');
+                        windowTitle: 'This is title', text: 'This is body');
                     print(result);
                   },
                   title: const Text('Show OK')),
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.okCancel);
                     print(result);
@@ -173,7 +187,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.abortRetryIgnore);
                     print(result);
@@ -182,7 +196,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.cancelTryContinue);
                     print(result);
@@ -191,7 +205,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.retryCancel);
                     print(result);
@@ -200,7 +214,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.yesNo);
                     print(result);
@@ -209,7 +223,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showAlert(
-                        windowTitle: 'This ia title',
+                        windowTitle: 'This is title',
                         text: 'This is body',
                         alertStyle: AlertButtonStyle.yesNoCancel);
                     print(result);
@@ -219,12 +233,12 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text('Custom Alerts',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'This ia title',
+                      windowTitle: 'This is title',
                       text: 'This is body',
                       positiveButtonTitle: "Positive",
                       negativeButtonTitle: "Negative",
@@ -232,9 +246,12 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                       iconPath: Platform.isWindows
                           ? 'images/tray_icon_original.ico'
                           : 'images/tray_icon_original.png',
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: false),
+                      options: PlatformAlertOptions(
+                        windows: WindowsAlertOptions(
+                          additionalWindowTitle: 'Window title',
+                          showAsLinks: false,
+                        ),
+                      ),
                     );
                     print(result);
                   },
@@ -242,14 +259,17 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               ListTile(
                   onTap: () async {
                     final result = await FlutterPlatformAlert.showCustomAlert(
-                      windowTitle: 'This ia title',
+                      windowTitle: 'This is title',
                       text: 'This is body',
                       positiveButtonTitle: "Positive",
                       negativeButtonTitle: "Negative",
                       neutralButtonTitle: "Neutral",
-                      options: FlutterPlatformAlertOption(
-                          additionalWindowTitleOnWindows: 'Window title',
-                          showAsLinksOnWindows: true),
+                      options: PlatformAlertOptions(
+                        windows: WindowsAlertOptions(
+                          additionalWindowTitle: 'Window title',
+                          preferMessageBox: true,
+                        ),
+                      ),
                     );
                     print(result);
                   },
@@ -271,7 +291,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
         break;
       case 'show_alert_ok':
         final result = await FlutterPlatformAlert.showAlert(
-            windowTitle: 'This ia title', text: 'This is body');
+            windowTitle: 'This is title', text: 'This is body');
         print(result);
         break;
       default:

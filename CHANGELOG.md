@@ -1,3 +1,18 @@
+## 0.5.3
+
+- Fix Android build for Flutter 3.24.0.
+
+
+## 0.5.1
+
+- Fix issues on Android.
+
+## 0.5.0
+
+- Breaking refactor by replacing FlutterPlatformAlertOption with PlatformAlertOptions.
+- New customizations with IosAlertStyle and IosButtonStyle.
+- Updates documentation and examples.
+
 ## 0.4.0
 
 - Support Flutter 3.10.x.
