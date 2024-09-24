@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text('Play Alert Sounds',
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.headlineSmall),
               ),
               ListTile(
                   onTap: () async {
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: Text('Standard Alert with Styles',
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.headlineSmall),
               ),
               ListTile(
                   onTap: () async {
@@ -219,7 +219,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text('Custom Alerts',
-                    style: Theme.of(context).textTheme.headline6),
+                    style: Theme.of(context).textTheme.headlineSmall),
               ),
               ListTile(
                   onTap: () async {
