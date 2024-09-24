@@ -14,7 +14,7 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.26.x
+          #   flutter-version: 3.26.x
           channel: "main" # optional, default to: 'stable'
       - name: Enable SPM
         run: |
@@ -31,6 +31,6 @@ jobs:
       - name: Build iOS
         run: |
           pod deintegrate
-          
+
           flutter build ios --debug --no-codesign --simulator
         working-directory: ${{ github.workspace }}/flutter_platform_alert/example
