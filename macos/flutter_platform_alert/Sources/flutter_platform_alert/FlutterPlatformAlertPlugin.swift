@@ -153,10 +153,13 @@ private enum FlutterPlatformIconStyle: String {
 }
 
 public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
+  private var registrar: FlutterPluginRegistrar!
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
       name: "flutter_platform_alert", binaryMessenger: registrar.messenger)
     let instance = FlutterPlatformAlertPlugin()
+    instance.registrar = registrar
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
