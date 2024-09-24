@@ -1,4 +1,0 @@
-module flutter_platform_alert {
-    header "/Users/zonble/Work/flutter_platform_alert/ios/flutter_platform_alert/.build/x86_64-apple-macosx/debug/flutter_platform_alert.build/flutter_platform_alert-Swift.h"
-    requires objc
-}

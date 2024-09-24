@@ -5,15 +5,16 @@
 Pod::Spec.new do |s|
   s.name             = 'flutter_platform_alert'
   s.version          = '0.0.1'
-  s.summary          = 'A simple plugin to present native alerts'
+  s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
-A simple plugin to present native alerts
+A new Flutter plugin project.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
+
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
+  s.source_files = 'flutter_platform_alert/Sources/flutter_platform_alert/**/*'
   s.dependency 'FlutterMacOS'
 
   s.platform = :osx, '10.11'
