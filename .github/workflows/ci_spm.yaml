@@ -30,6 +30,7 @@ jobs:
       #     working-directory: ${{ github.workspace }}/flutter_platform_alert/example
       - name: Cleans up iOS project
         run: |
+          pod install
           pod deintegrate
           rm Podfile
           echo "#include \"Generated.xcconfig\""\n" > Flutter/Debug.xcconfig
