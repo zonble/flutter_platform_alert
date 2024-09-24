@@ -1,7 +1,10 @@
+## 0.6.0
+
+- The plugin is not Swift Package Manager ready.
+
 ## 0.5.3
 
 - Fix Android build for Flutter 3.24.0.
-
 
 ## 0.5.1
 
