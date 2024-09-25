@@ -11,4 +11,4 @@ build/
 # FVM Version Cache
 .fvm/
 .build/
-.spm/
+.swiftpm/
