@@ -29,8 +29,8 @@ jobs:
       - name: Cleans up macOS project
         run: |
           pod deintegrate
-          echo "#include \"Generated.xcconfig\""\n" > Flutter/Debug.xcconfig
-          echo "#include \"Generated.xcconfig\""\n" > Flutter/Release.xcconfig
+          echo "#include \"Generated.xcconfig\"\n" > Flutter/Debug.xcconfig
+          echo "#include \"Generated.xcconfig\"\n" > Flutter/Release.xcconfig
         working-directory: ${{ github.workspace }}/flutter_platform_alert/example/macos
       - name: Build macOS
         run: flutter build macos
@@ -39,8 +39,8 @@ jobs:
         run: |
           pod deintegrate
           rm Podfile
-          echo "#include \"Generated.xcconfig\""\n" > Flutter/Debug.xcconfig
-          echo "#include \"Generated.xcconfig\""\n" > Flutter/Release.xcconfig
+          echo "#include \"Generated.xcconfig\"\n" > Flutter/Debug.xcconfig
+          echo "#include \"Generated.xcconfig\"\n" > Flutter/Release.xcconfig
         working-directory: ${{ github.workspace }}/flutter_platform_alert/example/ios
       - name: Build iOS
         run: |
