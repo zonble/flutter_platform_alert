@@ -41,9 +41,9 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "")
-          val text = args.getOrDefault("text", "")
-          val alertStyle = args.getOrDefault("alertStyle", "ok")
+          val windowTitle = args["windowTitle"] ?: ""
+          val text = args["text"] ?: ""
+          val alertStyle = args["alertStyle"] ?: "ok"
 
           AlertDialog.Builder(
             this.activity,
@@ -81,12 +81,12 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "")
-          val text = args.getOrDefault("text", "")
-          val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "")
-          val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
-          val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
-          val base64Icon = args.getOrDefault("base64Icon", "")
+          val windowTitle = args["windowTitle"] ?: ""
+          val text = args["text"] ?: ""
+          val positiveButtonTitle = args["positiveButtonTitle"] ?: ""
+          val negativeButtonTitle = args["negativeButtonTitle"] ?: ""
+          val neutralButtonTitle = args["neutralButtonTitle"] ?: ""
+          val base64Icon = args["base64Icon"] ?: ""
 
           val builder = AlertDialog.Builder(
             this.activity,
