@@ -27,6 +27,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace "net.zonble.flutter_platform_alert"
+    testNamespace "net.zonble.flutter_platform_alert"
     compileSdkVersion 34
 
     compileOptions {
