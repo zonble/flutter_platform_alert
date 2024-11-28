@@ -123,6 +123,26 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       }
     }
 
+    func style(forButtonStyle style: String?) -> UIAlertAction.Style {
+      switch style {
+      case "cancel":
+        return .cancel
+      case "destructive":
+        return .destructive
+      default:
+        return .default
+      }
+    }
+
+    func alertStyle(forStyle style: String?) -> UIAlertController.Style {
+      switch style {
+      case "actionSheet":
+        return .actionSheet
+      default:
+        return .alert
+      }
+    }
+
     switch call.method {
     case "playAlertSound":
       let systemSoundID: SystemSoundID = 4095
@@ -145,7 +165,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       let alertStyle =
         FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
       let buttons = alertStyle.buttons
-      let preferredStyle: UIAlertController.Style = .alert
+      let preferredStyle: UIAlertController.Style = alertStyle(forStyle: args["iosAlertStyle"] as? String)
       let controller = UIAlertController(
         title: windowTitle, message: text, preferredStyle: preferredStyle)
       for i in 0..<buttons.count {
@@ -177,7 +197,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       if let positiveButton = args["positiveButtonTitle"] as? String,
         positiveButton.isEmpty == false
       {
-        let buttonStyle = style(forButtonTitle: positiveButton)
+        let buttonStyle = style(forButtonStyle: args["positiveButtonStyle"] as? String)
         actions.append(
           UIAlertAction(title: positiveButton, style: buttonStyle) { action in
             result(CustomAlertButton.positiveButton.rawValue)
@@ -186,7 +206,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       if let neutralButton = args["neutralButtonTitle"] as? String,
         neutralButton.isEmpty == false
       {
-        let buttonStyle = style(forButtonTitle: neutralButton)
+        let buttonStyle = style(forButtonStyle: args["neutralButtonStyle"] as? String)
         actions.append(
           UIAlertAction(title: neutralButton, style: buttonStyle) { action in
             result(CustomAlertButton.neutralButton.rawValue)
@@ -195,13 +215,13 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       if let negativeButton = args["negativeButtonTitle"] as? String,
         negativeButton.isEmpty == false
       {
-        let buttonStyle = style(forButtonTitle: negativeButton)
+        let buttonStyle = style(forButtonStyle: args["negativeButtonStyle"] as? String)
         actions.append(
           UIAlertAction(title: negativeButton, style: buttonStyle) { action in
             result(CustomAlertButton.negativeButton.rawValue)
           })
       }
-      let preferredStyle: UIAlertController.Style = .alert
+      let preferredStyle: UIAlertController.Style = alertStyle(forStyle: args["iosAlertStyle"] as? String)
       let controller = UIAlertController(
         title: windowTitle, message: text, preferredStyle: preferredStyle)
       for action in actions {
