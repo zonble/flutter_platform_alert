@@ -134,7 +134,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       }
     }
 
-    func alertStyle(forStyle style: String?) -> UIAlertController.Style {
+    func alertControllerStyle(forStyle style: String?) -> UIAlertController.Style {
       switch style {
       case "actionSheet":
         return .actionSheet
@@ -165,7 +165,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
       let alertStyle =
         FlutterPlatformAlertStyle(rawValue: alertStyleString) ?? FlutterPlatformAlertStyle.ok
       let buttons = alertStyle.buttons
-      let preferredStyle: UIAlertController.Style = alertStyle(forStyle: args["iosAlertStyle"] as? String)
+      let preferredStyle: UIAlertController.Style = alertControllerStyle(forStyle: args["iosAlertStyle"] as? String)
       let controller = UIAlertController(
         title: windowTitle, message: text, preferredStyle: preferredStyle)
       for i in 0..<buttons.count {
@@ -221,7 +221,7 @@ public class FlutterPlatformAlertPlugin: NSObject, FlutterPlugin {
             result(CustomAlertButton.negativeButton.rawValue)
           })
       }
-      let preferredStyle: UIAlertController.Style = alertStyle(forStyle: args["iosAlertStyle"] as? String)
+      let preferredStyle: UIAlertController.Style = alertControllerStyle(forStyle: args["iosAlertStyle"] as? String)
       let controller = UIAlertController(
         title: windowTitle, message: text, preferredStyle: preferredStyle)
       for action in actions {
