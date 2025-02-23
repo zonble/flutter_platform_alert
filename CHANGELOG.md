@@ -1,3 +1,8 @@
+## 0.7.0
+
+- Support Flutter 3.29.0
+- Update iOS API.
+
 ## 0.6.0
 
 - The plugin is not Swift Package Manager ready.
