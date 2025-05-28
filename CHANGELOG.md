@@ -1,3 +1,12 @@
+## 0.8.0
+
+- Support Flutter 3.32.0.
+- Handles barrier dismiss on Android.
+  - A new option `cancelable` is added to the alert options.
+  - By the default, the alert dialog is cancelable.
+  - When a user taps outside the alert dialog, it will be dismissed and return "cancel".
+- Updates the example app to use the latest Flutter version.
+
 ## 0.7.0
 
 - Support Flutter 3.29.0
