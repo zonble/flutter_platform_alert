@@ -229,6 +229,30 @@ class _MyAppState extends State<MyApp> with TrayListener, WindowListener {
                     print(result);
                   },
                   title: const Text('Show Yes/No/Cancel')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This is title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.yesNoCancel);
+                    print(result);
+                  },
+                  title: const Text('Show Yes/No/Cancel')),
+              ListTile(
+                  onTap: () async {
+                    final result = await FlutterPlatformAlert.showAlert(
+                        windowTitle: 'This is title',
+                        text: 'This is body',
+                        alertStyle: AlertButtonStyle.yesNoCancel,
+                        options: PlatformAlertOptions(
+                          android: AndroidAlertOptions(
+                            cancelable: false,
+                          ),
+                        ));
+                    print(result);
+                  },
+                  title: const Text(
+                      'Show Yes/No/Cancel but disable cancelable on Android')),
               const Divider(),
               Padding(
                 padding: const EdgeInsets.all(16.0),

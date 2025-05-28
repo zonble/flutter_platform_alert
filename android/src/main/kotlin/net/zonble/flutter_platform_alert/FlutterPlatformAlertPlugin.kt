@@ -44,8 +44,9 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val windowTitle = args["windowTitle"] ?: ""
           val text = args["text"] ?: ""
           val alertStyle = args["alertStyle"] ?: "ok"
+          val cancelable = args["cancelable"] as Boolean? ?: true
 
-          AlertDialog.Builder(
+          val dialog = AlertDialog.Builder(
             this.activity,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text).apply {
@@ -73,7 +74,12 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                   .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
               else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
             }
-          }.create().show()
+          }.create()
+          dialog.setCancelable(cancelable)
+          dialog.setOnCancelListener {
+              result.success("cancel")
+          }
+          dialog.show()
         }
       }
       "showCustomAlert" -> {
@@ -87,6 +93,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val negativeButtonTitle = args["negativeButtonTitle"] ?: ""
           val neutralButtonTitle = args["neutralButtonTitle"] ?: ""
           val base64Icon = args["base64Icon"] ?: ""
+          val cancelable = args["cancelable"] as Boolean? ?: true
 
           val builder = AlertDialog.Builder(
             this.activity,
@@ -117,7 +124,12 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             builder.setIcon(icon)
           }
 
-          builder.create().show()
+          val dialog = builder.create()
+          dialog.setCancelable(cancelable)
+          dialog.setOnCancelListener {
+            result.success("cancel")
+          }
+          dialog.show()
         }
       }
       else -> result.notImplemented()
