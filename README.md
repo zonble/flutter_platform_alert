@@ -2,7 +2,7 @@
 
 2021 and onwards © Weizhong Yang a.k.a zonble.
 
-[![Pub](https://img.shields.io/pub/v/flutter_platform_alert.svg)](https://pub.dartlang.org/packages/flutter_platform_alert) [![example workflow](https://github.com/zonble/flutter_platform_alert/actions/workflows/ci.yaml/badge.svg)](https://github.com/zonble/flutter_platform_alert/actions) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/zonble/flutter_platform_alert/blob/main/LICENSE)
+[![Pub](https://img.shields.io/pub/v/flutter_platform_alert.svg)](https://pub.dartlang.org/packages/flutter_platform_alert) [![example workflow](https://github.com/zonble/flutter_platform_alert/actions/workflows/ci.yaml/badge.svg)](https://github.com/zonble/flutter_platform_alert/actions) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/zonble/flutter_platform_alert/blob/main/LICENSE) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zonble/flutter_platform_alert)
 
 A simple plugin to present native alerts, including playing alert sounds and
 showing alert dialogs on various platforms including iOS, Android, Windows,
