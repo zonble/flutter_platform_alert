@@ -30,16 +30,35 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   override fun onMethodCall(call: MethodCall, result: Result): Unit =
     when (call.method) {
       "playAlertSound" -> {
-        val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val ringTone =
-          RingtoneManager.getRingtone(this.context, notification)
-        ringTone.play()
-        result.success(null)
+        try {
+          val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+          if (notification != null) {
+            val ringTone = RingtoneManager.getRingtone(this.context, notification)
+            if (ringTone != null) {
+              ringTone.play()
+            }
+          }
+          result.success(null)
+        } catch (e: Exception) {
+          // Fallback: try to play a basic notification sound or continue silently
+          try {
+            val fallbackUri = RingtoneManager.getActualDefaultRingtoneUri(this.context, RingtoneManager.TYPE_NOTIFICATION)
+            if (fallbackUri != null) {
+              val ringTone = RingtoneManager.getRingtone(this.context, fallbackUri)
+              ringTone?.play()
+            }
+          } catch (fallbackException: Exception) {
+            // If all else fails, continue silently without crashing
+          }
+          result.success(null)
+        }
       }
       "showAlert" -> {
         val args = call.arguments as? HashMap<String, String>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
+        } else if (this.activity == null) {
+          result.error("No activity", "Activity is not available. Cannot show alert when app is not in foreground.", "")
         } else {
           val windowTitle = args["windowTitle"] ?: ""
           val text = args["text"] ?: ""
@@ -47,7 +66,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val cancelable = args["cancelable"] as Boolean? ?: true
 
           val dialog = AlertDialog.Builder(
-            this.activity,
+            this.activity!!,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text).apply {
             when (alertStyle) {
@@ -86,6 +105,8 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         val args = call.arguments as? HashMap<String, String>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
+        } else if (this.activity == null) {
+          result.error("No activity", "Activity is not available. Cannot show alert when app is not in foreground.", "")
         } else {
           val windowTitle = args["windowTitle"] ?: ""
           val text = args["text"] ?: ""
@@ -96,7 +117,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val cancelable = args["cancelable"] as Boolean? ?: true
 
           val builder = AlertDialog.Builder(
-            this.activity,
+            this.activity!!,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text)
           var buttonCount = 0
@@ -171,6 +192,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   }
 
   override fun onDetachedFromActivity() {
+    activity = null
   }
 
   //endregion
