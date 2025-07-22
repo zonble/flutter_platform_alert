@@ -30,16 +30,38 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   override fun onMethodCall(call: MethodCall, result: Result): Unit =
     when (call.method) {
       "playAlertSound" -> {
-        val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val ringTone =
-          RingtoneManager.getRingtone(this.context, notification)
-        ringTone.play()
-        result.success(null)
+        try {
+          var notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+          if (notification == null) {
+            // Fallback to alarm sound if notification sound is not available
+            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+          }
+          if (notification == null) {
+            // Final fallback to ringtone
+            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+          }
+          
+          if (notification != null && this.context != null) {
+            val ringTone = RingtoneManager.getRingtone(this.context, notification)
+            if (ringTone != null) {
+              ringTone.play()
+              result.success(null)
+            } else {
+              result.error("SOUND_ERROR", "Unable to create ringtone from URI", null)
+            }
+          } else {
+            result.error("SOUND_ERROR", "No sound URI available or context is null", null)
+          }
+        } catch (e: Exception) {
+          result.error("SOUND_ERROR", "Failed to play alert sound: ${e.message}", null)
+        }
       }
       "showAlert" -> {
         val args = call.arguments as? HashMap<String, String>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
+        } else if (this.activity == null) {
+          result.error("NO_ACTIVITY", "Activity is not available. Cannot show alert when app is backgrounded.", null)
         } else {
           val windowTitle = args["windowTitle"] ?: ""
           val text = args["text"] ?: ""
@@ -86,6 +108,8 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         val args = call.arguments as? HashMap<String, String>
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
+        } else if (this.activity == null) {
+          result.error("NO_ACTIVITY", "Activity is not available. Cannot show alert when app is backgrounded.", null)
         } else {
           val windowTitle = args["windowTitle"] ?: ""
           val text = args["text"] ?: ""
@@ -165,12 +189,15 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
+    activity = null
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    activity = binding.activity
   }
 
   override fun onDetachedFromActivity() {
+    activity = null
   }
 
   //endregion
