@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, windows-latest, ubuntu-latest]
-        version: ["3.19.x", "3.22.x", "3.24.x", "3.29.x", "3.32.x"]
+        version: ["3.19.x", "3.22.x", "3.24.x", "3.29.x", "3.32.x", "3.35.x", "3.38.x"]
         include:
           - os: macOS-latest
             TARGET: macos
