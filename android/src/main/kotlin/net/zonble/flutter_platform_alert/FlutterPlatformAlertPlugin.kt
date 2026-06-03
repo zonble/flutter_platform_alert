@@ -46,33 +46,40 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val alertStyle = args["alertStyle"] ?: "ok"
           val cancelable = args["cancelable"] as Boolean? ?: true
 
+          var callbackConsumed: Boolean = false;
+          fun success(message: String) {
+            if (callbackConsumed) return
+            callbackConsumed = true
+            result.success(message)
+          }
+
           val dialog = AlertDialog.Builder(
             this.activity,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text).apply {
             when (alertStyle) {
               "abortRetryIgnore" ->
-                setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
-                  .setNeutralButton(R.string.ignore) { _, _ -> result.success("ignore") }
-                  .setNegativeButton(R.string.abort) { _, _ -> result.success("abort") }
+                setPositiveButton(R.string.retry) { _, _ -> success("retry") }
+                  .setNeutralButton(R.string.ignore) { _, _ -> success("ignore") }
+                  .setNegativeButton(R.string.abort) { _, _ -> success("abort") }
               "cancelTryContinue" ->
-                setPositiveButton(R.string.try_again) { _, _ -> result.success("try_again") }
-                  .setNeutralButton(R.string.continue_button) { _, _ -> result.success("continue" ) }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                setPositiveButton(R.string.try_again) { _, _ -> success("try_again") }
+                  .setNeutralButton(R.string.continue_button) { _, _ -> success("continue" ) }
+                  .setNegativeButton(R.string.cancel) { _, _ -> success("cancel") }
               "okCancel" ->
-                setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                setPositiveButton(R.string.ok) { _, _ -> success("ok") }
+                  .setNegativeButton(R.string.cancel) { _, _ -> success("cancel") }
               "retryCancel" ->
-                setPositiveButton(R.string.retry) { _, _ -> result.success("retry") }
-                  .setNegativeButton(R.string.cancel) { _, _ -> result.success("cancel") }
+                setPositiveButton(R.string.retry) { _, _ -> success("retry") }
+                  .setNegativeButton(R.string.cancel) { _, _ -> success("cancel") }
               "yesNo" ->
-                setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
-                  .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
+                setPositiveButton(R.string.yes) { _, _ -> success("yes") }
+                  .setNegativeButton(R.string.no) { _, _ -> success("no") }
               "yesNoCancel" ->
-                setPositiveButton(R.string.yes) { _, _ -> result.success("yes") }
-                  .setNeutralButton(R.string.cancel) { _, _ -> result.success("cancel") }
-                  .setNegativeButton(R.string.no) { _, _ -> result.success("no") }
-              else -> setPositiveButton(R.string.ok) { _, _ -> result.success("ok") }
+                setPositiveButton(R.string.yes) { _, _ -> success("yes") }
+                  .setNeutralButton(R.string.cancel) { _, _ -> success("cancel") }
+                  .setNegativeButton(R.string.no) { _, _ -> success("no") }
+              else -> setPositiveButton(R.string.ok) { _, _ -> success("ok") }
             }
           }.create()
           dialog.setCancelable(cancelable)
@@ -95,25 +102,32 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val base64Icon = args["base64Icon"] ?: ""
           val cancelable = args["cancelable"] as Boolean? ?: true
 
+          var callbackConsumed: Boolean = false;
+          fun success(message: String) {
+            if (callbackConsumed) return
+            callbackConsumed = true
+            result.success(message)
+          }
+
           val builder = AlertDialog.Builder(
             this.activity,
             getDialogStyle()
           ).setTitle(windowTitle).setMessage(text)
           var buttonCount = 0
           if (positiveButtonTitle.isNotEmpty()) {
-            builder.setPositiveButton(positiveButtonTitle) { _, _ -> result.success("positive_button") }
+            builder.setPositiveButton(positiveButtonTitle) { _, _ -> success("positive_button") }
             buttonCount += 1
           }
           if (negativeButtonTitle.isNotEmpty()) {
-            builder.setNegativeButton(negativeButtonTitle) { _, _ -> result.success("negative_button") }
+            builder.setNegativeButton(negativeButtonTitle) { _, _ -> success("negative_button") }
             buttonCount += 1
           }
           if (negativeButtonTitle.isNotEmpty()) {
-            builder.setNeutralButton(neutralButtonTitle) { _, _ -> result.success("neutral_button") }
+            builder.setNeutralButton(neutralButtonTitle) { _, _ -> success("neutral_button") }
             buttonCount += 1
           }
           if (buttonCount == 0) {
-            builder.setPositiveButton("OK") { _, _ -> result.success("other") }
+            builder.setPositiveButton("OK") { _, _ -> success("other") }
             buttonCount += 1
           }
 
@@ -132,7 +146,9 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           dialog.show()
         }
       }
-      else -> result.notImplemented()
+      else -> {
+          result.notImplemented()
+      }
     }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
