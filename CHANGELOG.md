@@ -1,3 +1,10 @@
+## 0.9.0
+
+- Expand Flutter CI coverage through Flutter 3.44.x and update local FVM to
+  Flutter 3.41.0.
+- Fix Android dialog cancellation result handling.
+- Update README, CI settings, and development dependencies.
+
 ## 0.8.0
 
 - Support Flutter 3.32.0.

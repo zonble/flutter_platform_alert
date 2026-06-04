@@ -1,6 +1,8 @@
 .DS_Store
 .dart_tool/
 **/**/*.lock
+!pubspec.lock
+!example/pubspec.lock
 
 .packages
 .pub/
