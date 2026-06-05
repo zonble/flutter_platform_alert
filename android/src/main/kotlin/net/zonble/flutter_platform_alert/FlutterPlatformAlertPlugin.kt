@@ -141,7 +141,7 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val dialog = builder.create()
           dialog.setCancelable(cancelable)
           dialog.setOnCancelListener {
-            result.success("cancel")
+            success("cancel")
           }
           dialog.show()
         }
