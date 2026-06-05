@@ -1,3 +1,7 @@
+## 0.9.1
+
+- Fix Android dialog cancellation result handling to use the success callback.
+
 ## 0.9.0
 
 - Expand Flutter CI coverage through Flutter 3.44.x and update local FVM to
